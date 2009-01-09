@@ -118,7 +118,7 @@ package com.gaiaframework.core
 			initComplete();
 		}
 		// site centering code
-		protected function alignSite(w:int, h:int):void
+		protected function centerSite(w:int, h:int):void
 		{
 			_$WIDTH = w;
 			_$HEIGHT = h;
