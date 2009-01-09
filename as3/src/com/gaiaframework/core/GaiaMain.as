@@ -33,7 +33,7 @@ package com.gaiaframework.core
 		protected var controller:SiteController;
 		protected var view:SiteView;
 		
-		protected var alignCount:int = 0;
+		public var alignCount:int = 0;
 		public var _$WIDTH:int = 0;
 		public var _$HEIGHT:int = 0;
 		
@@ -130,7 +130,6 @@ package com.gaiaframework.core
 			onResize(new Event(Event.RESIZE));
 			if (alignCount++ > 2)
 			{
-				alignCount = 0;
 				removeEventListener(Event.ENTER_FRAME, alignEnterFrame);
 			}
 		}

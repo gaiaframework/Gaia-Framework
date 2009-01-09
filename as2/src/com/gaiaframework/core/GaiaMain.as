@@ -32,7 +32,7 @@ class com.gaiaframework.core.GaiaMain extends ObservableClass
 		
 	private var clip:MovieClip;
 	
-	private var alignCount:Number = 0;
+	public var alignCount:Number = 0;
 	public var _$WIDTH:Number = 0;
 	public var _$HEIGHT:Number = 0;
 	
@@ -130,7 +130,6 @@ class com.gaiaframework.core.GaiaMain extends ObservableClass
 		onResize();
 		if (alignCount++ > 2)
 		{
-			alignCount = 0;
 			delete clip.onEnterFrame;
 		}
 	}

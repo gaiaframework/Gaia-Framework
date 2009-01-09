@@ -27,7 +27,7 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	
 	public function GaiaImpl()
 	{
-		GaiaDebug.log("Gaia Framework (AS2) v3.0.0 Beta 1");
+		GaiaDebug.log("Gaia Framework (AS2) v2.5.0");
 	}
 	public static function birth():IGaia
 	{
