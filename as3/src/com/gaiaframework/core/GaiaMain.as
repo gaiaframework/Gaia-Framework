@@ -45,13 +45,14 @@ package com.gaiaframework.core
 		{
 			super();
 			_instance = this;
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			if (stage) onAddedToStage(new Event(Event.ADDED_TO_STAGE));
+			else addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		protected function onAddedToStage(event:Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			_$WIDTH = stage.stageWidth;
-			_$HEIGHT = stage.stageHeight;
+			if (!_$WIDTH) _$WIDTH = stage.stageWidth;
+			if (!_$HEIGHT) _$HEIGHT = stage.stageHeight;
 			CacheBuster.isOnline = (stage.loaderInfo.url.indexOf("http") == 0);
 			use namespace gaia_internal;
 			Gaia.impl = GaiaImpl.birth();
@@ -118,7 +119,7 @@ package com.gaiaframework.core
 			initComplete();
 		}
 		// site centering code
-		protected function centerSite(w:int, h:int):void
+		protected function alignSite(w:int, h:int):void
 		{
 			_$WIDTH = w;
 			_$HEIGHT = h;

@@ -275,13 +275,13 @@ class com.gaiaframework.core.SiteModel extends ObservableClass
 			else if ((charCode > 90 && charCode < 97) || (charCode > 122 && charCode < 128)) validRoute += "-";
 			else if (charCode > 127)
 			{
-				if ((charCode > 130 && charCode < 135) || charCode == 142 || charCode == 143 || charCode == 145 || charCode == 146 || charCode == 160) validRoute += "a";
+				if ((charCode > 130 && charCode < 135) || charCode == 142 || charCode == 143 || charCode == 145 || charCode == 146 || charCode == 160 || charCode == 193 || charCode == 225) validRoute += "a";
 				else if (charCode == 128 || charCode == 135) validRoute += "c";
-				else if (charCode == 130 || (charCode > 135 && charCode < 139) || charCode == 144) validRoute += "e";
-				else if ((charCode > 138 && charCode < 142) || charCode == 161) validRoute += "i";
+				else if (charCode == 130 || (charCode > 135 && charCode < 139) || charCode == 144 || charCode == 201 || charCode == 233) validRoute += "e";
+				else if ((charCode > 138 && charCode < 142) || charCode == 161 || charCode == 205 || charCode == 237) validRoute += "i";
 				else if (charCode == 164 || charCode == 165) validRoute += "n";
-				else if ((charCode > 146 && charCode < 150) || charCode == 153 || charCode == 162) validRoute += "o";
-				else if (charCode == 129 || charCode == 150 || charCode == 151 || charCode == 154 || charCode == 163) validRoute += "u";
+				else if ((charCode > 146 && charCode < 150) || charCode == 153 || charCode == 162 || charCode == 211 || charCode == 214 || charCode == 243 || charCode == 246 || charCode == 336 || charCode == 337) validRoute += "o";
+				else if (charCode == 129 || charCode == 150 || charCode == 151 || charCode == 154 || charCode == 163 || charCode == 218 || charCode == 220 || charCode == 250 || charCode == 252 || charCode == 368 || charCode == 369) validRoute += "u";
 			}
 			else
 			{

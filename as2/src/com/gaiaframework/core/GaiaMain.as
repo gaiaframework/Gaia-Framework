@@ -118,7 +118,7 @@ class com.gaiaframework.core.GaiaMain extends ObservableClass
 		initComplete();
 	}
 	// site centering code
-	public function centerSite(w:Number, h:Number):Void
+	public function alignSite(w:Number, h:Number):Void
 	{
 		_$WIDTH = w;
 		_$HEIGHT = h;

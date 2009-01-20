@@ -31,7 +31,7 @@ package com.gaiaframework.core
 		
 		public function GaiaImpl()
 		{
-			GaiaDebug.log("Gaia Framework (AS3) v2.5.0");
+			GaiaDebug.log("Gaia Framework (AS3) v3.0.0");
 		}
 		public static function birth():IGaia
 		{
