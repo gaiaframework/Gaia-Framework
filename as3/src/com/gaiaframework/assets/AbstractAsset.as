@@ -1,15 +1,15 @@
 ﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 package com.gaiaframework.assets
@@ -84,9 +84,9 @@ package com.gaiaframework.assets
 			if (_bytes > 0 && t > 0 && _bytes != t) _bytes = t;
 			dispatchEvent(new AssetEvent(AssetEvent.ASSET_COMPLETE, false, false, this));
 		}
-		protected function onError(event:IOErrorEvent):void
+		protected function onError(event:Event):void
 		{
-			GaiaDebug.warn(this + ' [IOErrorEvent text="' + event.text + '"]');
+			GaiaDebug.warn(this + ": " + event);
 			dispatchEvent(new AssetEvent(AssetEvent.ASSET_ERROR, false, false, this));
 		}
 		internal function loadOnDemand():void {}

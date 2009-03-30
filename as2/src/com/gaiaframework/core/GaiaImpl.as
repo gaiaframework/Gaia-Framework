@@ -1,20 +1,21 @@
-/*****************************************************************************************************
+﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is �2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 import com.gaiaframework.debug.GaiaDebug;
 import com.gaiaframework.events.*;
 import com.gaiaframework.assets.*;
+import com.gaiaframework.utils.*;
 import com.gaiaframework.core.*;
 import com.gaiaframework.api.*;
 
@@ -27,7 +28,7 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	
 	public function GaiaImpl()
 	{
-		GaiaDebug.log("Gaia Framework (AS2) v3.0.0");
+		GaiaDebug.log("Gaia Framework (AS2) v3.0.9");
 	}
 	public static function birth():IGaia
 	{
@@ -42,9 +43,11 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	{
 		GaiaHQ.instance.goto(branch, flow);
 	}
-	public function gotoRoute(route:String, flow:String):Void
+	public function gotoRoute(route:String, deeplink:String, flow:String):Void
 	{
-		GaiaHQ.instance.goto(SiteModel.routes[route] || "index", flow);
+		var validRoute:String = SiteModel.routes[route];
+		if (validRoute) validRoute += (deeplink || "");
+		GaiaHQ.instance.goto(validRoute || "index", flow);
 	}
 	public function getSiteTree():PageAsset
 	{
@@ -134,6 +137,15 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	public function setLoadTimeout(value:Number):Void
 	{
 		BranchLoader.timeoutLength = value;
+	}
+	public function setGlobalVolume(value:Number, duration:Number, onComplete:Function):Void
+	{
+		if (isNaN(duration)) SoundUtils.volume = value;
+		else SoundUtils.fadeTo(SoundUtils, value, duration, onComplete);
+	}
+	public function getGlobalVolume():Number
+	{
+		return SoundUtils.volume;
 	}
 	// SWFAddress Proxy
 	public function back():Void

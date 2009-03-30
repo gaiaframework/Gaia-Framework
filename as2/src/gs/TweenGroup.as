@@ -1,6 +1,6 @@
 /*
-VERSION: 1.02
-DATE: 12/16/2008
+VERSION: 1.03
+DATE: 1/19/2009
 ACTIONSCRIPT VERSION: 2.0 (AS3 version is also available)
 UPDATES & MORE DETAILED DOCUMENTATION AT: http://blog.greensock.com/tweengroup/
 DESCRIPTION:
@@ -131,15 +131,15 @@ NOTES:
 	  you run into any bugs/problems.
 	  
 
-CODED BY: Jack Doyle, jack@greensock.com
-Copyright 2008, GreenSock (This work is subject to the terms in http://www.greensock.com/terms_of_use.html.)
+AUTHOR: Jack Doyle, jack@greensock.com
+Copyright 2009, GreenSock. All rights reserved. This work is subject to the terms in http://www.greensock.com/terms_of_use.html or for corporate Club GreenSock members, the software agreement that was issued with the corporate membership.
 */
 
 import gs.*;
 import mx.utils.*;
 
 dynamic class gs.TweenGroup {
-		public static var version:Number = 1.02;
+		public static var version:Number = 1.03;
 		public static var ALIGN_INIT:String = "init";
 		public static var ALIGN_START:String = "start";
 		public static var ALIGN_END:String = "end";
@@ -567,9 +567,11 @@ dynamic class gs.TweenGroup {
 			var group:TweenGroup = new TweenGroup(null, $DefaultTweenClass, ALIGN_INIT, $vars.stagger || 0);
 			group.onComplete = $vars.onCompleteAll;
 			group.onCompleteParams = $vars.onCompleteAllParams;
+			group.onCompleteScope = $vars.onCompleteAllScope;
 			delete $vars.stagger;
 			delete $vars.onCompleteAll;
 			delete $vars.onCompleteAllParams;
+			delete $vars.onCompleteAllScope;
 			for (i = 0; i < $targets.length; i++) {
 				vars = {};
 				for (p in $vars) {

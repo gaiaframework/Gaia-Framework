@@ -1,21 +1,60 @@
 ﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 package com.gaiaframework.api
 {
 	import flash.media.SoundTransform;
+	import flash.media.Video;
 	import flash.net.NetStream;
+	
+	/**
+	 * Dispatched when a NetStream object is reporting its status or error condition.
+	 * @eventType flash.events.NetStatusEvent.NET_STATUS
+	 * @see http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/net/NetStream.html#event:netStatus
+	 */
+	[Event(name = "netStatus", type = "flash.events.NetStatusEvent")]
+	/**
+	 * Dispatched when the NetStream's onMetaData event is received
+	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.METADATA
+	 */
+	[Event(name = "metaData", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	/**
+	 * Dispatched when the NetStream's onCuePoint event is received
+	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.CUEPOINT
+	 */
+	[Event(name = "cuePoint", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	/**
+	 * Dispatched when the NetStream's onImageData event is received
+	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.IMAGE_DATA
+	 */
+	[Event(name = "imageData", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	/**
+	 * Dispatched when the NetStream's onTextData event is received
+	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.TEXT_DATA
+	 */
+	[Event(name = "textData", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	/**
+	 * Dispatched when the NetStream's onXMPData event is received
+	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.XMP_DATA
+	 */
+	[Event(name = "xmpData", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	/**
+	 * Dispatched when the NetStream's fires an AsyncErrorEvent
+	 * @eventType flash.events.AsyncErrorEvent.ASYNC_ERROR
+	 * @see http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/net/NetStream.html#event:asyncError
+	 */
+	[Event(name = "asyncError", type = "flash.events.AsyncErrorEvent")]
 	
 	/**
 	 * This is the interface for the <code>NetStreamAsset</code>.  
@@ -63,6 +102,15 @@ package com.gaiaframework.api
 		 * @param onComplete The callback function to call when the pan is complete
 		 */
 		function panTo(pan:Number, duration:Number, onComplete:Function = null):void;
+		/**
+		 * Attach the NetStreamAsset to a Video instance. A convenience method for Video.attachNetStream(NetStreamAsset.ns);
+		 * 
+		 * @see http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/media/Video.html#attachNetStream()
+		 * 
+		 * @param video A reference to a flash.media.Video instance
+		 */
+		function attach(video:Video):void;
+		
 		// PROXY FLV PROPS/FUNCS
 		/**
 		 * @see http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/net/NetStream.html#bufferLength flash.net.NetStream.bufferLength

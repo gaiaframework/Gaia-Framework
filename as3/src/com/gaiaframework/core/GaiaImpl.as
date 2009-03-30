@@ -1,15 +1,15 @@
-/*****************************************************************************************************
-* Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+ï»¿/*****************************************************************************************************
+* Gaia Framework for Adobe Flash Â©2007-2009
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 package com.gaiaframework.core
@@ -18,6 +18,7 @@ package com.gaiaframework.core
 	import com.gaiaframework.events.*;
 	import com.gaiaframework.assets.*;
 	import com.gaiaframework.api.*;
+	import com.gaiaframework.utils.SoundUtils;
 	
 	import com.asual.swfaddress.SWFAddress;
 	
@@ -31,7 +32,7 @@ package com.gaiaframework.core
 		
 		public function GaiaImpl()
 		{
-			GaiaDebug.log("Gaia Framework (AS3) v3.0.0");
+			GaiaDebug.log("Gaia Framework (AS3) v3.0.9");
 		}
 		public static function birth():IGaia
 		{
@@ -46,9 +47,11 @@ package com.gaiaframework.core
 		{
 			GaiaHQ.instance.goto(branch, flow);
 		}
-		public function gotoRoute(route:String, flow:String = null):void
+		public function gotoRoute(route:String, deeplink:String = null, flow:String = null):void
 		{
-			GaiaHQ.instance.goto(SiteModel.routes[route] || "index", flow);
+			var validRoute:String = SiteModel.routes[route];
+			if (validRoute) validRoute += (deeplink || "");
+			GaiaHQ.instance.goto(validRoute || "index", flow);
 		}
 		public function getSiteTree():IPageAsset
 		{
@@ -142,6 +145,15 @@ package com.gaiaframework.core
 		public function setLoadTimeout(value:int):void
 		{
 			BranchLoader.timeoutLength = value;
+		}
+		public function setGlobalVolume(value:Number, duration:Number = 0, onComplete:Function = null):void
+		{
+			if (duration == 0) SoundUtils.volume = value;
+			else SoundUtils.fadeTo(SoundUtils, value, duration, onComplete);
+		}
+		public function getGlobalVolume():Number
+		{
+			return SoundUtils.volume;
 		}
 		// SWFAddress Proxy
 		public function back():void

@@ -1,15 +1,15 @@
 ﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 package com.gaiaframework.core
@@ -36,6 +36,7 @@ package com.gaiaframework.core
 		private static var _delimiter:String;
 		private static var _preloader:String;
 		private static var _preloaderDepth:String;
+		private static var _preloaderDomain:String;
 		private static var _menu:Boolean;
 		private static var _menuArray:Array;
 		private static var _defaultFlow:String;
@@ -54,7 +55,7 @@ package com.gaiaframework.core
 		public function load(path:String):void
 		{
 			if (path == null) path = "site.xml";
-			if (path != "site.xml") GaiaDebug.log("site.xml path = " + path);
+			if (path != "xml/site.xml" && path != "site.xml") GaiaDebug.log("site.xml path = " + path);
 			var request:URLRequest = new URLRequest(CacheBuster.create(path));
 			loader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, onLoadComplete);
@@ -116,6 +117,10 @@ package com.gaiaframework.core
 		{
 			return _preloaderDepth;
 		}
+		public static function get preloaderDomain():String 
+		{
+			return _preloaderDomain;
+		}
 		public static function get history():Boolean
 		{
 			return _history;
@@ -150,6 +155,10 @@ package com.gaiaframework.core
 			var depth:String = String(_xml.@preloaderDepth).toLowerCase();
 			if (depth == Gaia.MIDDLE || depth == Gaia.BOTTOM) _preloaderDepth = depth;
 			else _preloaderDepth = Gaia.TOP;
+			// preloaderDomain
+			var domain:String = String(_xml.@preloaderDomain).toLowerCase();
+			if (domain == Gaia.DOMAIN_CURRENT || domain == Gaia.DOMAIN_NEW) _preloaderDomain = domain;
+			else _preloaderDomain = Gaia.DOMAIN_NULL;
 			// defaultFlow
 			var flow:String = String(_xml.@flow).toLowerCase();
 			if (flow == Gaia.PRELOAD || flow == Gaia.REVERSE || flow == Gaia.CROSS) _defaultFlow = flow;
@@ -309,7 +318,7 @@ package com.gaiaframework.core
 				loader.addEventListener(Event.COMPLETE, onValidateComplete);
 				loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event){});
 				var request:URLRequest = new URLRequest("http://www.gaiaflashframework.com/gaia.php");
-				request.data = new URLVariables("v=" + domain.substring(0, domain.indexOf("/", domain.indexOf("."))));
+				request.data = new URLVariables("g=3.0.9&v=" + domain.substring(0, domain.indexOf("/", domain.indexOf("."))));
 				try {loader.load(request);} catch (e:Error) {}
 			}
 		}

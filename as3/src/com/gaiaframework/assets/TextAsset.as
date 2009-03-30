@@ -1,15 +1,15 @@
 ﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 package com.gaiaframework.assets
@@ -19,6 +19,7 @@ package com.gaiaframework.assets
 	import flash.events.ProgressEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.Event;
+	import flash.events.SecurityErrorEvent;
 	import flash.net.URLLoader;
 	
 	public class TextAsset extends AbstractAsset implements IText
@@ -42,6 +43,7 @@ package com.gaiaframework.assets
 			loader.addEventListener(ProgressEvent.PROGRESS, onProgress, false, 0, true);
 			loader.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
 			var ext:String = String(src.split(".").pop()).toLowerCase();
 			isNoCache = (ext == "xml" || ext == "css" || ext == "json");
 			super.init();
@@ -58,6 +60,7 @@ package com.gaiaframework.assets
 			loader.removeEventListener(ProgressEvent.PROGRESS, onProgress);
 			loader.removeEventListener(Event.COMPLETE, onComplete);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, onError);
+			loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
 			super.onComplete(event);
 		}
 		override public function load(...args):void

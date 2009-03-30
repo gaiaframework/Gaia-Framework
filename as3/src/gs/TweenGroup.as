@@ -4,7 +4,7 @@ DATE: 12/16/2008
 ACTIONSCRIPT VERSION: 3.0 (AS2 version is also available)
 UPDATES & MORE DETAILED DOCUMENTATION AT: http://blog.greensock.com/tweengroup/
 DESCRIPTION:
-	TweenGroup is a very powerful, flexible tool for managing groups of TweenLite/TweenFilterLite/TweenMax tweens.
+	TweenGroup is a very powerful, flexible tool for managing groups of TweenLite/TweenMax tweens.
 	Here are a few of the features:
 		
 		- pause(), resume(), reverse(), or restart() the group as a whole. This is an easy way to add
@@ -81,7 +81,7 @@ PROPERTIES:
 	- loop : Number
 	- yoyo : Number
 	- tweens : Array
-	- timeScale : Number  (only affects TweenMax/TweenFilterLite instances)
+	- timeScale : Number  (only affects TweenMax instances)
 	
 
 EXAMPLES: 
@@ -98,7 +98,7 @@ EXAMPLES:
 		myGroup.align = TweenGroup.ALIGN_SEQUENCE;
 		
 		
-	Or if you don't mind all your tweens being the same type (TweenMax in this case as opposed to TweenLite or TweenFilterLite), 
+	Or if you don't mind all your tweens being the same type (TweenMax in this case as opposed to TweenLite), 
 	you can do the same thing in less code like this:
 	
 		var myGroup:TweenGroup = new TweenGroup([{target:mc, time:1, x:300}, {target:mc, time:3, y:400}, {target:mc, time:2, blurFilter:{blurX:10, blurY:10}}], TweenMax, TweenGroup.ALIGN_SEQUENCE);
@@ -127,8 +127,8 @@ NOTES:
 	  you run into any bugs/problems.
 	  
 
-CODED BY: Jack Doyle, jack@greensock.com
-Copyright 2008, GreenSock (This work is subject to the terms in http://www.greensock.com/terms_of_use.html.)
+AUTHOR: Jack Doyle, jack@greensock.com
+Copyright 2009, GreenSock. All rights reserved. This work is subject to the terms in http://www.greensock.com/terms_of_use.html or for corporate Club GreenSock members, the software agreement that was issued with the corporate membership.
 */
 
 package gs {
@@ -142,8 +142,9 @@ package gs {
 		public static const ALIGN_END:String = "end";
 		public static const ALIGN_SEQUENCE:String = "sequence";
 		public static const ALIGN_NONE:String = "none";
+		
+		protected static var _overwriteMode:int = (OverwriteManager.enabled) ? OverwriteManager.mode : OverwriteManager.init(); //forces OverwriteManager to init() in AUTO mode (if it's not already initted) because AUTO overwriting is much more intuitive when working with sequences and groups. If you prefer to manage overwriting manually to save the 1kb, just comment this line out.
 		protected static var _TweenMax:Class;
-		protected static var _TweenFilterLite:Class;
 		protected static var _classInitted:Boolean;
 		protected static var _unexpired:Array = []; //TweenGroups that have not ended/expired yet (have endTimes in the future)
 		protected static var _prevTime:uint = 0; // records TweenLite.currentTime so that we can compare it on the checkExpiration() function to see if/when TweenGroups have completed.
@@ -168,8 +169,8 @@ package gs {
 		/**
 		 * Constructor 
 		 * 
-		 * @param $tweens An Array of either TweenLite/TweenFilterLite/TweenMax instances or Objects each containing at least a "target" and "time" property, like [{target:mc, time:2, x:300},{target:mc2, time:1, alpha:0.5}]
-		 * @param $DefaultTweenClass Defines which tween class should be used when parsing objects that are not already TweenLite/TweenFilterLite/TweenMax instances. Choices are TweenLite, TweenFilterLite, or TweenMax.
+		 * @param $tweens An Array of either TweenLite/TweenMax instances or Objects each containing at least a "target" and "time" property, like [{target:mc, time:2, x:300},{target:mc2, time:1, alpha:0.5}]
+		 * @param $DefaultTweenClass Defines which tween class should be used when parsing objects that are not already TweenLite/TweenMax instances. Choices are TweenLite or TweenMax.
 		 * @param $align Controls the alignment of the tweens within the group. Options are TweenGroup.ALIGN_SEQUENCE, TweenGroup.ALIGN_START, TweenGroup.ALIGN_END, TweenGroup.ALIGN_INIT, or TweenGroup.ALIGN_NONE
 		 * @param $stagger Amount of time (in seconds) to offset each tween according to the current alignment. For example, if the align property is set to ALIGN_SEQUENCE and stagger is 0.5, this adds 0.5 seconds between each tween in the sequence. If align is set to ALIGN_START, it would add 0.5 seconds to the start time of each tween (0 for the first tween, 0.5 for the second, 1 for the third, etc.)
 		 * */
@@ -184,12 +185,6 @@ package gs {
 				} catch ($e:Error) {
 					_TweenMax = Array;
 				}
-				try {
-					_TweenFilterLite = (getDefinitionByName("gs.TweenFilterLite") as Class); //Checking "if (tween is _TweenFilterLite)" is twice as fast as "if (tween.hasOwnProperty("timeScale"))". Storing a reference to the class this way prevents us from having to import the whole TweenFilterLite class, thus saves a lot of Kb.
-				} catch ($e:Error) {
-					_TweenFilterLite = Array;
-				}
-				var overwriteMode:int = (OverwriteManager.enabled) ? OverwriteManager.mode : OverwriteManager.init(2); //forces OverwriteManager to init() in AUTO mode (if it's not already initted) because AUTO overwriting is much more intuitive when working with sequences and groups. If you prefer to manage overwriting manually to save the 1kb, just comment this line out.
 				TweenLite.timingSprite.addEventListener(Event.ENTER_FRAME, checkExpiration, false, -1, true);
 				_classInitted = true;
 			}
@@ -334,7 +329,7 @@ package gs {
 		 */
 		public function reverse($forcePlay:Boolean=true):void {
 			_reversed = !_reversed;
-			var i:int, tween:TweenLite, proxy:ReverseProxy, endTime:Number, startTime:Number, initTime:Number, prog:Number, tScale:Number, timeOffset:Number = 0, isFinished:Boolean = false;
+			var i:int, tween:TweenLite, proxy:ReverseProxy, startTime:Number, initTime:Number, prog:Number, tScale:Number, timeOffset:Number = 0, isFinished:Boolean = false;
 			var time:Number = (!isNaN(_pauseTime)) ? _pauseTime : TweenLite.currentTime;
 			if (this.endTime <= time) {
 				timeOffset = int(this.endTime - time) + 1;		
@@ -382,7 +377,7 @@ package gs {
 		/**
 		 * Provides an easy way to determine which tweens (if any) are currently active. Active tweens are not paused and are in the process of tweening values.
 		 * 
-		 * @return An Array of TweenLite/TweenFilterLite/TweenMax instances from the group that are currently active (in the process of tweening)
+		 * @return An Array of TweenLite/TweenMax instances from the group that are currently active (in the process of tweening)
 		 */
 		public function getActive():Array {
 			var a:Array = [];
@@ -446,7 +441,13 @@ package gs {
 		 */
 		public function realign():void {
 			if (_align != ALIGN_NONE && _tweens.length > 1) {
-				var l:uint = _tweens.length, i:int, offset:Number = _stagger * 1000;
+				var l:uint = _tweens.length, i:int, offset:Number = _stagger * 1000, prog:Number, rev:Boolean = _reversed;
+				
+				if (rev) {
+					prog = this.progressWithDelay;
+					reverse();
+					this.progressWithDelay = 0;
+				}
 				
 				if (_align == ALIGN_SEQUENCE) {
 					setTweenInitTime(_tweens[0], _initTime);
@@ -468,6 +469,11 @@ package gs {
 					for (i = 0; i < l; i++) {
 						setTweenInitTime(_tweens[i], this.endTime - ((_tweens[i].delay + _tweens[i].duration) * 1000 / _tweens[i].combinedTimeScale) - (offset * i));
 					}
+				}
+				
+				if (rev) {
+					reverse();
+					this.progressWithDelay = prog;
 				}
 				
 			}
@@ -517,16 +523,20 @@ package gs {
 			}
 		}
 		
+		public function toString():String {
+			return "TweenGroup( " + _tweens.toString() + " )";
+		}
+		
 
 //---- STATIC PUBLIC FUNCTIONS -----------------------------------------------------------------------------------
 
 		/**
-		 * Parses an Array that contains either TweenLite/TweenFilterLite/TweenMax instances or Objects that are meant to define tween instances.
+		 * Parses an Array that contains either TweenLite/TweenMax instances or Objects that are meant to define tween instances.
 		 * Specifically, they must contain at LEAST "target" and "time" properties. For example: TweenGroup.parse([{target:mc1, time:2, x:300},{target:mc2, time:1, y:400}]);
 		 *  
-		 * @param $tweens An Array of either TweenLite/TweenFilterLite/TweenMax instances or Objects that are meant to define tween instances. For example [{target:mc1, time:2, x:300},{target:mc2, time:1, y:400}]
-		 * @param $BaseTweenClass Defines which tween class should be used when parsing objects that are not already TweenLite/TweenFilterLite/TweenMax instances. Choices are TweenLite, TweenFilterLite, or TweenMax.
-		 * @return An Array with only TweenLite/TweenFilterLite/TweenMax instances
+		 * @param $tweens An Array of either TweenLite/TweenMax instances or Objects that are meant to define tween instances. For example [{target:mc1, time:2, x:300},{target:mc2, time:1, y:400}]
+		 * @param $BaseTweenClass Defines which tween class should be used when parsing objects that are not already TweenLite/TweenMax instances. Choices are TweenLite or TweenMax.
+		 * @return An Array with only TweenLite/TweenMax instances
 		 */
 		public static function parse($tweens:Array, $DefaultTweenClass:Class=null):Array {
 			if ($DefaultTweenClass == null) {
@@ -557,14 +567,14 @@ package gs {
 		 * @param $targets An Array of objects to tween.
 		 * @param $duration Duration (in seconds) of the tween
 		 * @param $vars An object containing the end values of all the properties you'd like to have tweened (or if you're using the TweenGroup.allFrom() method, these variables would define the BEGINNING values). Additional special properties: "stagger", "onCompleteAll", and "onCompleteAllParams"
-		 * @param $DefaultTweenClass Defines which tween class to use. Choices are TweenLite, TweenFilterLite, or TweenMax.
+		 * @param $DefaultTweenClass Defines which tween class to use. Choices are TweenLite or TweenMax.
 		 * @return TweenGroup instance
 		 */
 		public static function allTo($targets:Array, $duration:Number, $vars:Object, $DefaultTweenClass:Class=null):TweenGroup {
 			if ($DefaultTweenClass == null) {
 				$DefaultTweenClass = TweenLite;
 			}
-			var i:int, target:Object, vars:Object, p:String;
+			var i:int, vars:Object, p:String;
 			var group:TweenGroup = new TweenGroup(null, $DefaultTweenClass, ALIGN_INIT, $vars.stagger || 0);
 			group.onComplete = $vars.onCompleteAll;
 			group.onCompleteParams = $vars.onCompleteAllParams;
@@ -590,7 +600,7 @@ package gs {
 		 * @param $targets An Array of objects to tween.
 		 * @param $duration Duration (in seconds) of the tween
 		 * @param $vars An object containing the beginning values of all the properties you'd like to have tweened. Additional special properties: "stagger", "onCompleteAll", and "onCompleteAllParams"
-		 * @param $DefaultTweenClass Defines which tween class to use. Choices are TweenLite, TweenFilterLite, or TweenMax.
+		 * @param $DefaultTweenClass Defines which tween class to use. Choices are TweenLite or TweenMax.
 		 * @return TweenGroup instance
 		 */
 		public static function allFrom($targets:Array, $duration:Number, $vars:Object, $DefaultTweenClass:Class=null):TweenGroup {
@@ -717,7 +727,7 @@ package gs {
 		 * @return An Array with the tweens in the correct render order
 		 */
 		protected function getRenderOrder($tweens:Array, $time:Number):Array {
-			var i:int, tween:TweenLite, startTime:Number, postTweens:Array = [], preTweens:Array = [], a:Array = [];
+			var i:int, startTime:Number, postTweens:Array = [], preTweens:Array = [], a:Array = [];
 			for (i = $tweens.length - 1; i > -1; i--) {
 				startTime = getStartTime($tweens[i]);
 				if (startTime >= $time) {
@@ -914,24 +924,24 @@ package gs {
 		}
 		
 		/**
-		 * @return timeScale property of the first TweenFilterLite or TweenMax instance in the group (or 1 if there aren't any). Remember, timeScale edits do NOT affect TweenLite instances!
+		 * @return timeScale property of the first TweenMax instance in the group (or 1 if there aren't any). Remember, timeScale edits do NOT affect TweenLite instances!
 		 */
 		public function get timeScale():Number {
 			for (var i:uint = 0; i < _tweens.length; i++) {
-				if (_tweens[i] is _TweenFilterLite) {
+				if (_tweens[i] is _TweenMax) {
 					return _tweens[i].timeScale;
 				}
 			}
 			return 1;
 		}
 		/**
-		 * Changes the timeScale of all TweenFilterLite and TweenMax instances in the TweenGroup. Remember, TweenLite instances are NOT affected by timeScale!
+		 * Changes the timeScale of all TweenMax instances in the TweenGroup. Remember, TweenLite instances are NOT affected by timeScale!
 		 * 
-		 * @param $n time scale for all TweenMax/TweenFilterLite instances in the TweenGroup. 1 is normal speed, 0.5 is half speed, 2 is double speed, etc.
+		 * @param $n time scale for all TweenMax instances in the TweenGroup. 1 is normal speed, 0.5 is half speed, 2 is double speed, etc.
 		 */
 		public function set timeScale($n:Number):void {
 			for (var i:int = _tweens.length - 1; i > -1; i--) {
-				if (_tweens[i] is _TweenFilterLite) {
+				if (_tweens[i] is _TweenMax) {
 					_tweens[i].timeScale = $n;
 				}
 			}

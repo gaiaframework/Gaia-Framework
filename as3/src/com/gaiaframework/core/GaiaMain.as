@@ -1,15 +1,15 @@
 ﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 //Main initializes the framework.  It sets up the primary event broadcast/listener chains.
@@ -45,12 +45,28 @@ package com.gaiaframework.core
 		{
 			super();
 			_instance = this;
-			if (stage) onAddedToStage(new Event(Event.ADDED_TO_STAGE));
-			else addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		public static function get instance():GaiaMain
+		{
+			return _instance;
 		}
 		protected function onAddedToStage(event:Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			if (stage.stageWidth == 0 || stage.stageHeight == 0) addEventListener(Event.ENTER_FRAME, onWaitForWidthAndHeight);
+			else startGaia();
+		}
+		private function onWaitForWidthAndHeight(event:Event):void
+		{
+			if (stage.stageWidth > 0 && stage.stageHeight > 0)
+			{
+				removeEventListener(Event.ENTER_FRAME, onWaitForWidthAndHeight);
+				startGaia();
+			}
+		}
+		private function startGaia():void
+		{
 			if (!_$WIDTH) _$WIDTH = stage.stageWidth;
 			if (!_$HEIGHT) _$HEIGHT = stage.stageHeight;
 			CacheBuster.isOnline = (stage.loaderInfo.url.indexOf("http") == 0);
@@ -58,12 +74,13 @@ package com.gaiaframework.core
 			Gaia.impl = GaiaImpl.birth();
 			model = new SiteModel(stage.loaderInfo.url);
 			model.addEventListener(Event.COMPLETE, onSiteModelComplete);
-			model.load(stage.loaderInfo.parameters.siteXML || siteXML);
 			view = new SiteView();
+			loadSiteXML();
 		}
-		public static function get instance():GaiaMain
+		// override if you need to do something custom before the site xml is loaded
+		protected function loadSiteXML():void
 		{
-			return _instance;
+			model.load(stage.loaderInfo.parameters.siteXML || siteXML);
 		}
 		private function onSiteModelComplete(event:Event):void
 		{	

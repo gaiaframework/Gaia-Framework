@@ -1,15 +1,15 @@
 ﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 import com.gaiaframework.utils.ObservableClass;
@@ -308,7 +308,7 @@ class com.gaiaframework.core.SiteModel extends ObservableClass
 			var tx:LoadVars = new LoadVars();
 			tx.onLoad = Delegate.create(this, onValidateComplete);
 			var domain:String = _root._url.substring(0, _root._url.indexOf("/", _root._url.indexOf(".")));
-			tx.load("http://www.gaiaflashframework.com/gaia.php?v=" + domain);
+			tx.load("http://www.gaiaflashframework.com/gaia.php?g=3.0.9&v=" + domain);
 		}
 	}
 	private function onValidateComplete():Void 

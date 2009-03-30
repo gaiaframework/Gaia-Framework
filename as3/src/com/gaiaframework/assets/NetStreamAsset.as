@@ -1,23 +1,25 @@
 ﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 package com.gaiaframework.assets
 {
 	import com.gaiaframework.api.INetStream;
+	import com.gaiaframework.events.NetStreamAssetEvent;
 	import com.gaiaframework.utils.SoundUtils;
 	import com.gaiaframework.events.AssetEvent;
 	
+	import flash.events.AsyncErrorEvent;	
 	import flash.events.NetStatusEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.IOErrorEvent;
@@ -25,6 +27,7 @@ package com.gaiaframework.assets
 	import flash.events.Event;
 	
 	import flash.media.SoundTransform;
+	import flash.media.Video;
 	import flash.utils.Timer;
 	
 	import flash.net.NetConnection;
@@ -56,6 +59,8 @@ package com.gaiaframework.assets
 			_ns = new NetStream(_nc);
 			_transform = _ns.soundTransform;
 			_ns.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+			_ns.addEventListener(AsyncErrorEvent.ASYNC_ERROR, onAsyncError);
+			_ns.addEventListener(IOErrorEvent.IO_ERROR, onError);
 			_ns.client = this;
 		}
 		override public function preload():void
@@ -113,10 +118,11 @@ package com.gaiaframework.assets
 			if (_ns.bytesLoaded == _ns.bytesTotal && _ns.bytesTotal > 4) onComplete(new Event(Event.COMPLETE));
 		}
 
-		// META DATA + STATUS
+		// EVENTS
 		public function onMetaData(info:Object):void
 		{
 			_metaData = info;
+			dispatchEvent(new NetStreamAssetEvent(NetStreamAssetEvent.METADATA, false, false, info));
 		}
 		public function get metaData():Object
 		{
@@ -126,10 +132,30 @@ package com.gaiaframework.assets
 		{
 			return Number(_metaData != null ? _metaData.duration || 0 : 0);
 		}
+		public function onCuePoint(info:Object):void
+		{
+			dispatchEvent(new NetStreamAssetEvent(NetStreamAssetEvent.CUEPOINT, false, false, info));
+		}
+		public function onImageData(info:Object):void
+		{
+			dispatchEvent(new NetStreamAssetEvent(NetStreamAssetEvent.IMAGE_DATA, false, false, info));
+		}
+		public function onTextData(info:Object):void
+		{
+			dispatchEvent(new NetStreamAssetEvent(NetStreamAssetEvent.TEXT_DATA, false, false, info));
+		}
+		public function onXMPData(info:Object):void
+		{
+			dispatchEvent(new NetStreamAssetEvent(NetStreamAssetEvent.XMP_DATA, false, false, info));
+		}
 		private function onNetStreamStatus(event:NetStatusEvent):void
 		{
 			dispatchEvent(event);
-		}		
+		}
+		private function onAsyncError(event:AsyncErrorEvent):void
+		{
+			dispatchEvent(event);
+		}
 		// WRAPPER METHODS
 		public function get volume():Number
 		{
@@ -156,6 +182,10 @@ package com.gaiaframework.assets
 		public function panTo(pan:Number, duration:Number, onComplete:Function = null):void
 		{
 			SoundUtils.panTo(this, pan, duration, onComplete);
+		}
+		public function attach(video:Video):void
+		{
+			video.attachNetStream(_ns);
 		}
 		
 		// PROXY FLV PROPS/FUNCS
@@ -228,7 +258,7 @@ package com.gaiaframework.assets
 		// EVENT LISTENER OVERRIDES
 		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
 		{
-			if (type != AssetEvent.ASSET_PROGRESS && type != AssetEvent.ASSET_COMPLETE && type != AssetEvent.ASSET_ERROR && type != IOErrorEvent.IO_ERROR) 
+			if (type != AssetEvent.ASSET_PROGRESS && type != AssetEvent.ASSET_COMPLETE && type != AssetEvent.ASSET_ERROR && type != IOErrorEvent.IO_ERROR && type != NetStreamAssetEvent.METADATA && type != NetStreamAssetEvent.CUEPOINT && type != NetStreamAssetEvent.IMAGE_DATA && type != NetStreamAssetEvent.TEXT_DATA && type != NetStreamAssetEvent.XMP_DATA) 
 			{
 				_ns.addEventListener(type, listener, useCapture, priority, useWeakReference);
 			}
@@ -239,7 +269,7 @@ package com.gaiaframework.assets
 		}
 		override public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
 		{
-			if (type != AssetEvent.ASSET_PROGRESS && type != AssetEvent.ASSET_COMPLETE && type != AssetEvent.ASSET_ERROR && type != IOErrorEvent.IO_ERROR) 
+			if (type != AssetEvent.ASSET_PROGRESS && type != AssetEvent.ASSET_COMPLETE && type != AssetEvent.ASSET_ERROR && type != IOErrorEvent.IO_ERROR && type != NetStreamAssetEvent.METADATA && type != NetStreamAssetEvent.CUEPOINT && type != NetStreamAssetEvent.IMAGE_DATA && type != NetStreamAssetEvent.TEXT_DATA && type != NetStreamAssetEvent.XMP_DATA)
 			{
 				_ns.removeEventListener(type, listener, useCapture);
 			}

@@ -1,17 +1,18 @@
 ﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
+import com.gaiaframework.events.NetStreamAssetEvent;
 import com.gaiaframework.assets.AbstractAsset;
 import mx.utils.Delegate;
 
@@ -36,6 +37,8 @@ class com.gaiaframework.assets.NetStreamAsset extends AbstractAsset
 		_nc.connect(null);
 		_ns = new NetStream(_nc);
 		_ns.onMetaData = Delegate.create(this, onMetaDataEvent);
+		_ns.onCuePoint = Delegate.create(this, onCuePointEvent);
+		_ns.onStatus = Delegate.create(this, onStatusEvent);
 	}
 	public function preload():Void
 	{
@@ -74,10 +77,19 @@ class com.gaiaframework.assets.NetStreamAsset extends AbstractAsset
 		if (_ns.bytesLoaded == _ns.bytesTotal && _ns.bytesTotal > 4) onComplete();
 	}
 	
-	// META DATA
-	private function onMetaDataEvent(obj:Object):Void 
+	// EVENTS
+	private function onMetaDataEvent(info:Object):Void 
 	{
-		_metaData = obj;
+		_metaData = info;
+		dispatchEvent(new NetStreamAssetEvent(NetStreamAssetEvent.METADATA, this, info));
+	}
+	private function onCuePointEvent(info:Object):Void
+	{
+		dispatchEvent(new NetStreamAssetEvent(NetStreamAssetEvent.CUEPOINT, this, info));
+	}
+	private function onStatusEvent(info:Object):Void
+	{
+		dispatchEvent(new NetStreamAssetEvent(NetStreamAssetEvent.STATUS, this, info));
 	}
 	public function get metaData():Object 
 	{
@@ -86,6 +98,12 @@ class com.gaiaframework.assets.NetStreamAsset extends AbstractAsset
 	public function get duration():Number 
 	{
 		return _metaData.totalduration || _metaData.duration || 0;
+	}
+	
+	// HELPER METHOD
+	public function attach(video:Video):Void
+	{
+		video.attachVideo(_ns);
 	}
 	
 	// PROXY FLV PROPS/FUNCS
@@ -117,9 +135,17 @@ class com.gaiaframework.assets.NetStreamAsset extends AbstractAsset
 	{
 		_ns.onMetaData = func;
 	}
+	public function onCuePoint(func:Function):Void
+	{
+		_ns.onCuePoint = func;
+	}
 	public function onStatus(func:Function):Void
 	{
 		_ns.onStatus = func;
+	}
+	public function onPlayStatus(func:Function):Void
+	{
+		_ns.onPlayStatus = func;
 	}
 	public function pause(flag:Boolean):Void
 	{

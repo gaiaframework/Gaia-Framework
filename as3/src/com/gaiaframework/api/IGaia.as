@@ -1,15 +1,15 @@
 ﻿/*****************************************************************************************************
 * Gaia Framework for Adobe Flash ©2007-2009
-* Written by: Steven Sacks
-* email: stevensacks@gmail.com
+* Author: Steven Sacks
+*
 * blog: http://www.stevensacks.net/
 * forum: http://www.gaiaflashframework.com/forum/
 * wiki: http://www.gaiaflashframework.com/wiki/
 * 
 * By using the Gaia Framework, you agree to keep the above contact information in the source code.
 * 
-* Gaia Framework for Adobe Flash is ©2007-2009 Steven Sacks and is released under the MIT License:
-* http://www.opensource.org/licenses/mit-license.php 
+* Gaia Framework for Adobe Flash is released under the GPL License:
+* http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
 package com.gaiaframework.api
@@ -45,7 +45,7 @@ package com.gaiaframework.api
 		 * @param	route The branch to navigate to
 		 * @param	flow The flow override to use
 		 */
-		function gotoRoute(route:String, flow:String = null):void
+		function gotoRoute(route:String, deeplink:String = null, flow:String = null):void
 		/**
 		 * Returns the PageAsset instance of the index page. 
 		 */
@@ -168,7 +168,21 @@ package com.gaiaframework.api
 		 * 
 		 * @param	value The time in milliseconds to wait for a file in a branch load to show progress
 		 */
-		function setLoadTimeout(value:int):void
+		function setLoadTimeout(value:int):void;
+		/**
+		 * Sets the global volume of the entire site. 
+		 * Passing a duration will fade the global volume.
+		 * Passing an onComplete function will call it when the fade is complete.
+		 * 
+		 * @param value 0-1 The value you want to set the global volume to
+		 * @param duration The duration in seconds you want to fade the global volume to value
+		 * @param onComplete The function you want to call when the global volume fade is complete
+		 */
+		function setGlobalVolume(value:Number, duration:Number = 0, onComplete:Function = null):void;
+		/**
+		 * Returns the global volume of the entire site.
+		 */
+		function getGlobalVolume():Number;
 		
 		// SWFAddress Proxy
 		/**
