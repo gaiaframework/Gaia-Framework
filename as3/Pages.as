@@ -13,31 +13,9 @@
 *****************************************************************************************************/
 
 package PACKAGENAME
-{
-	import com.gaiaframework.templates.AbstractPreloader;
-	import com.gaiaframework.events.AssetEvent;
-	
-	public class Preloader extends AbstractPreloader
-	{	
-		public var scaffold:PreloaderScaffold;
+{	
+	public class Pages
+	{
 		
-		public function Preloader()
-		{
-			super();
-		}
-		override public function transitionIn():void
-		{
-			scaffold.transitionIn();
-			transitionInComplete();
-		}		
-		override public function transitionOut():void
-		{
-			scaffold.transitionOut();
-			transitionOutComplete();
-		}
-		override public function onProgress(event:AssetEvent):void
-		{
-			scaffold.onProgress(event);
-		}
 	}
 }
