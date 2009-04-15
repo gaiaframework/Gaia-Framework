@@ -28,7 +28,7 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	
 	public function GaiaImpl()
 	{
-		GaiaDebug.log("Gaia Framework (AS2) v3.0.9");
+		GaiaDebug.log("Gaia Framework (AS2) v3.1.0");
 	}
 	public static function birth():IGaia
 	{
@@ -128,11 +128,15 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	}
 	public function getWidth():Number
 	{
-		return GaiaMain.instance._$WIDTH;
+		return GaiaMain.instance.__WIDTH;
 	}
 	public function getHeight():Number
 	{
-		return GaiaMain.instance._$HEIGHT;
+		return GaiaMain.instance.__HEIGHT;
+	}
+	public function getSitePosition():Object
+	{
+		return {x:SiteView.instance.clip._x, y:SiteView.instance.clip._y};
 	}
 	public function setLoadTimeout(value:Number):Void
 	{

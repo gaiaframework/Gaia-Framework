@@ -45,7 +45,7 @@ package com.gaiaframework.api
 		 * @param	route The branch to navigate to
 		 * @param	flow The flow override to use
 		 */
-		function gotoRoute(route:String, deeplink:String = null, flow:String = null):void
+		function gotoRoute(route:String, deeplink:String = null, flow:String = null):void;
 		/**
 		 * Returns the PageAsset instance of the index page. 
 		 */
@@ -63,6 +63,10 @@ package com.gaiaframework.api
 		 * @param	value The title of the site.
 		 */
 		function setSiteTitle(value:String):void;
+		/**
+		 * Returns the current Site View x,y position as an object with properties x and y.  This is useful when using site centering code.
+		 */
+		function getSitePosition():Object;
 		/**
 		 * Sets the delimiter for the site if you setSiteTitle with a different delimiter. You need to call refreshContextMenu() to have this change reflected in the ContextMenu.
 		 * @param	value The delimiter value

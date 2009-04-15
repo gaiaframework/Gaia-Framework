@@ -164,7 +164,6 @@ package com.gaiaframework.core
 			if (flow == Gaia.PRELOAD || flow == Gaia.REVERSE || flow == Gaia.CROSS) _defaultFlow = flow;
 			else _defaultFlow = Gaia.NORMAL;
 			if (_routing) _routes = {};
-			validateSite();
 		}
 		private function parseTree():void
 		{
@@ -309,24 +308,6 @@ package com.gaiaframework.core
 			return validRoute.toLowerCase();
 		}
 		// Site XML Validation
-		private var so:SharedObject = SharedObject.getLocal("gaia");
-		private function validateSite():void
-		{
-			if (!so.data.valid && domain.indexOf("http") == 0)
-			{
-				var loader:URLLoader = new URLLoader();
-				loader.addEventListener(Event.COMPLETE, onValidateComplete);
-				loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event){});
-				var request:URLRequest = new URLRequest("http://www.gaiaflashframework.com/gaia.php");
-				request.data = new URLVariables("g=3.0.9&v=" + domain.substring(0, domain.indexOf("/", domain.indexOf("."))));
-				try {loader.load(request);} catch (e:Error) {}
-			}
-		}
-		private function onValidateComplete(event:Event):void 
-		{
-			so.data.valid = true;
-			so.flush();
-		}
 		public static function validateNode(node:XML, isPage:Boolean = false):void
 		{
 			var error:String = "*Invalid Site XML* " + (isPage ? "Page " : "Asset ");

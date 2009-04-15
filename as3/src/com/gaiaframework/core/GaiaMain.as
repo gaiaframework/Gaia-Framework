@@ -34,8 +34,8 @@ package com.gaiaframework.core
 		protected var view:SiteView;
 		
 		public var alignCount:int = 0;
-		public var _$WIDTH:int = 0;
-		public var _$HEIGHT:int = 0;
+		public var __WIDTH:int = 0;
+		public var __HEIGHT:int = 0;
 		
 		protected var siteXML:String;
 		
@@ -67,8 +67,8 @@ package com.gaiaframework.core
 		}
 		private function startGaia():void
 		{
-			if (!_$WIDTH) _$WIDTH = stage.stageWidth;
-			if (!_$HEIGHT) _$HEIGHT = stage.stageHeight;
+			if (!__WIDTH) __WIDTH = stage.stageWidth;
+			if (!__HEIGHT) __HEIGHT = stage.stageHeight;
 			CacheBuster.isOnline = (stage.loaderInfo.url.indexOf("http") == 0);
 			use namespace gaia_internal;
 			Gaia.impl = GaiaImpl.birth();
@@ -138,8 +138,8 @@ package com.gaiaframework.core
 		// site centering code
 		protected function alignSite(w:int, h:int):void
 		{
-			_$WIDTH = w;
-			_$HEIGHT = h;
+			__WIDTH = w;
+			__HEIGHT = h;
 			stage.addEventListener(Event.RESIZE, onResize);
 			addEventListener(Event.ENTER_FRAME, alignEnterFrame, false, 0, true);
 		}

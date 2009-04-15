@@ -25,6 +25,7 @@ package com.gaiaframework.core
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.ui.ContextMenu;
+	import flash.geom.Point;
 	
 	public class GaiaImpl implements IGaia
 	{
@@ -32,7 +33,7 @@ package com.gaiaframework.core
 		
 		public function GaiaImpl()
 		{
-			GaiaDebug.log("Gaia Framework (AS3) v3.0.9");
+			GaiaDebug.log("Gaia Framework (AS3) v3.1.0");
 		}
 		public static function birth():IGaia
 		{
@@ -69,6 +70,10 @@ package com.gaiaframework.core
 		{
 			SiteModel.title = value;
 			if (value.length > 0) setTitle(value.split("%PAGE%").join(BranchTools.getPage(getCurrentBranch()).title));
+		}
+		public function getSitePosition():Object
+		{
+			return {x:SiteView.instance.x, y:SiteView.instance.y};
 		}
 		public function setDelimiter(value:String):void
 		{
@@ -136,11 +141,11 @@ package com.gaiaframework.core
 		}
 		public function getWidth():int
 		{
-			return GaiaMain.instance._$WIDTH;
+			return GaiaMain.instance.__WIDTH;
 		}
 		public function getHeight():int
 		{
-			return GaiaMain.instance._$HEIGHT;
+			return GaiaMain.instance.__HEIGHT;
 		}
 		public function setLoadTimeout(value:int):void
 		{

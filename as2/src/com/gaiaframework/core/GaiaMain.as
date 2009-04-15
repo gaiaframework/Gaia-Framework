@@ -33,8 +33,8 @@ class com.gaiaframework.core.GaiaMain extends ObservableClass
 	private var clip:MovieClip;
 	
 	public var alignCount:Number = 0;
-	public var _$WIDTH:Number = 0;
-	public var _$HEIGHT:Number = 0;
+	public var __WIDTH:Number = 0;
+	public var __HEIGHT:Number = 0;
 	
 	private var siteXML:String;
 	
@@ -44,8 +44,8 @@ class com.gaiaframework.core.GaiaMain extends ObservableClass
 	{
 		super();
 		_instance = this;
-		_$WIDTH = Stage.width;
-		_$HEIGHT = Stage.height;
+		__WIDTH = Stage.width;
+		__HEIGHT = Stage.height;
 		GaiaDebug.isBrowser = (System.capabilities.playerType == "ActiveX" || System.capabilities.playerType == "PlugIn" || System.capabilities.playerType == "StandAlone");
 		CacheBuster.isOnline = (_root._url.indexOf("http") == 0);
 		clip = target.createEmptyMovieClip("site", target.getNextHighestDepth());
@@ -121,8 +121,8 @@ class com.gaiaframework.core.GaiaMain extends ObservableClass
 	// site centering code
 	public function alignSite(w:Number, h:Number):Void
 	{
-		_$WIDTH = w;
-		_$HEIGHT = h;
+		__WIDTH = w;
+		__HEIGHT = h;
 		clip.onEnterFrame = Delegate.create(this, alignEnterFrame);
 		Stage.addListener(this);
 	}

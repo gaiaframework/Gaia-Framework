@@ -299,22 +299,6 @@ class com.gaiaframework.core.SiteModel extends ObservableClass
 		return validRoute.toLowerCase();
 	}
 	// Site XML Validation
-	private var so:SharedObject;
-	private function validateSite():Void
-	{
-		so = SharedObject.getLocal("gaia");
-		if (!so.data.valid && _root._url.indexOf("http") == 0)
-		{
-			var tx:LoadVars = new LoadVars();
-			tx.onLoad = Delegate.create(this, onValidateComplete);
-			var domain:String = _root._url.substring(0, _root._url.indexOf("/", _root._url.indexOf(".")));
-			tx.load("http://www.gaiaflashframework.com/gaia.php?g=3.0.9&v=" + domain);
-		}
-	}
-	private function onValidateComplete():Void 
-	{
-		so.data.valid = true;
-	}
 	public static function validateNode(node:Object, isPage:Boolean):Void
 	{
 		var error:String = "*Invalid Site XML* " + (isPage ? "Page " : "Asset ");

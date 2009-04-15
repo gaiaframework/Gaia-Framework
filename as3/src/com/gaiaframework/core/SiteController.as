@@ -249,7 +249,8 @@ package com.gaiaframework.core
 		private function onPreloaderReady(event:Event):void
 		{
 			preloadController.removeEventListener(Event.COMPLETE, onPreloaderReady);
-			siteView.preloader.addChild(DisplayObject(preloadController.clip));
+			siteView.preloader.addChild(PreloadController(event.target).asset.loader);
+			//siteView.preloader.addChild(DisplayObject(preloadController.clip));
 		}
 		// EnterFrame functions
 		private function preloaderEnterFrame(event:Event):void

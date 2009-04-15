@@ -22,7 +22,8 @@ interface com.gaiaframework.api.IGaia
 	function getSiteTree():PageAsset;
 	function getMenuArray():Array;
 	function getSiteTitle():String;
-	function setSiteTitle(value:String):Void
+	function setSiteTitle(value:String):Void;
+	function getSitePosition():Object;
 	function setDelimiter(value:String):Void;
 	function getSiteXML():XML;
 	function getPage(branch:String):PageAsset;
@@ -42,7 +43,7 @@ interface com.gaiaframework.api.IGaia
 	function getWidth():Number;
 	function getHeight():Number;
 	function setLoadTimeout(value:Number):Void;
-	function setGlobalVolume(value:Number, duration:Number, onComplete:Function):Void
+	function setGlobalVolume(value:Number, duration:Number, onComplete:Function):Void;
 	
 	// SWFAddress Proxy
 	function back():Void;
