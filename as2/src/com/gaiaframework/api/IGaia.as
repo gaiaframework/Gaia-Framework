@@ -43,6 +43,7 @@ interface com.gaiaframework.api.IGaia
 	function getWidth():Number;
 	function getHeight():Number;
 	function setLoadTimeout(value:Number):Void;
+	function setPreloaderDelay(value:Number):Void;
 	function setGlobalVolume(value:Number, duration:Number, onComplete:Function):Void;
 	
 	// SWFAddress Proxy

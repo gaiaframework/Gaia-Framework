@@ -45,6 +45,10 @@ package com.gaiaframework.core
 			init(value);
 			showTimer.addEventListener(TimerEvent.TIMER, onShow);
 		}
+		public function set delay(value:int):void
+		{
+			showTimer.delay = Math.max(1, value);
+		}
 		public function get clip():IPreloader
 		{
 			return _preloader;

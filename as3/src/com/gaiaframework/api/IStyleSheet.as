@@ -42,6 +42,10 @@ package com.gaiaframework.api
 		function transformStyle(styleName:String):TextFormat;
 		// PROXY METHODS
 		/**
+		 * @see http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/text/StyleSheet.html#styleNames
+		 */
+		function get styleNames():Array
+		/**
 		 * @see http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/text/StyleSheet.html#clear() flash.text.StyleSheet.clear()
 		 */
 		function clear():void;

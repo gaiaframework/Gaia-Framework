@@ -14,11 +14,13 @@
 
 package com.gaiaframework.assets
 {
+	import com.gaiaframework.core.GaiaFonts;
 	import com.gaiaframework.api.IMovieClip;
-	import flash.display.MovieClip;	
+	import flash.display.MovieClip;
+	import flash.events.Event;
 	
 	public class MovieClipAsset extends SpriteAsset implements IMovieClip
-	{
+	{		
 		public function MovieClipAsset()
 		{
 			super();
@@ -26,6 +28,17 @@ package com.gaiaframework.assets
 		public function get content():MovieClip
 		{
 			return MovieClip(_loader.content);
+		}
+		// FONT MANAGEMENT
+		override protected function onComplete(event:Event):void 
+		{
+			var classNames:Array;
+			// first check to see if the swf has a fonts Array property
+			if (_loader.content.hasOwnProperty("fonts") && MovieClip(_loader.content).fonts is Array) classNames = MovieClip(_loader.content).fonts;
+			// then check to see if the node has a fonts attribute
+			else if (node && String(node.@fonts)) classNames = String(node.@fonts).split(" ").join("").split(",");
+			if (classNames) GaiaFonts.registerFonts(_loader.contentLoaderInfo.applicationDomain, classNames);
+			super.onComplete(event);
 		}
 		// PROXY PROPERTIES
 		public function get currentFrame():int

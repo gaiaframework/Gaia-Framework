@@ -174,6 +174,10 @@ package com.gaiaframework.api
 		 */
 		function setLoadTimeout(value:int):void;
 		/**
+		 * @param	value The time in milliseconds to delay the preloader transitionIn call (so it doesn't show up for cached content).  The default value is 150.
+		 */
+		function setPreloaderDelay(value:int):void;
+		/**
 		 * Sets the global volume of the entire site. 
 		 * Passing a duration will fade the global volume.
 		 * Passing an onComplete function will call it when the fade is complete.
@@ -187,6 +191,15 @@ package com.gaiaframework.api
 		 * Returns the global volume of the entire site.
 		 */
 		function getGlobalVolume():Number;
+		/**
+		 * @param	className The class name assigned to the font
+		 * @return  Returns the runtime name of the font for use with TextFormat
+		 */
+		function getFontName(className:String):String;
+		/**
+		 * @return An Array of the class names of all available fonts in the swf.  This array only contains the names of fonts that successfully registered. These names can be passed to getFontName().
+		 */
+		function getAvailableFonts():Array;
 		
 		// SWFAddress Proxy
 		/**

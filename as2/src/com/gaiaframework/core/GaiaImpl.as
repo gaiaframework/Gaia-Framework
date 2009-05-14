@@ -28,7 +28,7 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	
 	public function GaiaImpl()
 	{
-		GaiaDebug.log("Gaia Framework (AS2) v3.1.0");
+		GaiaDebug.log("Gaia Framework (AS2) v3.1.2");
 	}
 	public static function birth():IGaia
 	{
@@ -141,6 +141,10 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	public function setLoadTimeout(value:Number):Void
 	{
 		BranchLoader.timeoutLength = value;
+	}
+	public function setPreloaderDelay(value:Number):Void
+	{
+		SiteController.getPreloader().delay = value;
 	}
 	public function setGlobalVolume(value:Number, duration:Number, onComplete:Function):Void
 	{

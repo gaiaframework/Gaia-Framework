@@ -46,6 +46,10 @@ class com.gaiaframework.core.PreloadController extends ObservableClass
 		defaultLoadedDelegate = Delegate.create(this, onDefaultLoaded);
 		init(asset);
 	}
+	public function set delay(value:Number):Void
+	{
+		showDelay = Math.max(1, value);
+	}
 	public function get clip():IPreloader
 	{
 		return _preloader;

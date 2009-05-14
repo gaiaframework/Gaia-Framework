@@ -33,7 +33,7 @@ package com.gaiaframework.core
 		
 		public function GaiaImpl()
 		{
-			GaiaDebug.log("Gaia Framework (AS3) v3.1.0");
+			GaiaDebug.log("Gaia Framework (AS3) v3.1.2");
 		}
 		public static function birth():IGaia
 		{
@@ -151,6 +151,10 @@ package com.gaiaframework.core
 		{
 			BranchLoader.timeoutLength = value;
 		}
+		public function setPreloaderDelay(value:int):void
+		{
+			SiteController.getPreloader().delay = value;
+		}
 		public function setGlobalVolume(value:Number, duration:Number = 0, onComplete:Function = null):void
 		{
 			if (duration == 0) SoundUtils.volume = value;
@@ -159,6 +163,14 @@ package com.gaiaframework.core
 		public function getGlobalVolume():Number
 		{
 			return SoundUtils.volume;
+		}
+		public function getFontName(className:String):String
+		{
+			return GaiaFonts.getFontName(className);
+		}
+		public function getAvailableFonts():Array
+		{
+			return GaiaFonts.getAvailableFonts();
 		}
 		// SWFAddress Proxy
 		public function back():void

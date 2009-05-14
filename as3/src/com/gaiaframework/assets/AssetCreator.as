@@ -27,7 +27,11 @@ package com.gaiaframework.assets
 			var asset:AbstractAsset;
 			var type:String = String(node.@type).toLowerCase();
 			var ext:String = String(node.@src.split(".").pop()).toLowerCase();
-			if (ext == "swf" || ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "gif" || type =="bitmap" || type == "sprite" || type == "movieclip") 
+			if (type == "bytearray")
+			{
+				asset = new ByteArrayAsset();
+			}
+			else if (ext == "swf" || ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "gif" || type =="bitmap" || type == "sprite" || type == "movieclip") 
 			{
 				var d:String;
 				if (ext == "swf" || type == "movieclip")
