@@ -24,6 +24,8 @@ package com.gaiaframework.core
 	
 	import com.gaiaframework.api.Gaia;
 	
+	import org.libspark.ui.SWFWheel;
+	
 	import flash.display.Sprite;
 	import flash.events.Event;
 
@@ -53,6 +55,7 @@ package com.gaiaframework.core
 		}
 		protected function onAddedToStage(event:Event):void
 		{
+			SWFWheel.initialize(stage);
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			if (stage.stageWidth == 0 || stage.stageHeight == 0) addEventListener(Event.ENTER_FRAME, onWaitForWidthAndHeight);
 			else startGaia();
@@ -145,8 +148,8 @@ package com.gaiaframework.core
 		}
 		protected function alignEnterFrame(event:Event):void
 		{
-			onResize(new Event(Event.RESIZE));
-			if (alignCount++ > 2)
+			if (view) onResize(new Event(Event.RESIZE));
+			if (alignCount++ > 2 && view)
 			{
 				removeEventListener(Event.ENTER_FRAME, alignEnterFrame);
 			}

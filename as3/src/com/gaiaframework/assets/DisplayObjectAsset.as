@@ -65,8 +65,8 @@ package com.gaiaframework.assets
 			try 
 			{
 				loaderContext = null;
-				if (_domain == Gaia.DOMAIN_NEW) loaderContext = new LoaderContext(false, new ApplicationDomain());
-				else if (_domain == Gaia.DOMAIN_CURRENT) loaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
+				if (_domain == Gaia.DOMAIN_NEW) loaderContext = new LoaderContext(true, new ApplicationDomain());
+				else if (_domain == Gaia.DOMAIN_CURRENT) loaderContext = new LoaderContext(true, ApplicationDomain.currentDomain);
 				_loader.load(request, loaderContext);
 			}
 			catch (error:Error)
