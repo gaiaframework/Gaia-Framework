@@ -28,7 +28,7 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	
 	public function GaiaImpl()
 	{
-		GaiaDebug.log("Gaia Framework (AS2) v3.1.3");
+		GaiaDebug.log("Gaia Framework (AS2) v3.1.6");
 	}
 	public static function birth():IGaia
 	{
@@ -155,6 +155,10 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	{
 		return SoundUtils.volume;
 	}
+	public function addCustomAsset(assetClass:Function, type:String):Void
+	{
+		AssetTypes.add(assetClass, type);
+	}
 	// SWFAddress Proxy
 	public function back():Void
 	{
@@ -179,6 +183,10 @@ class com.gaiaframework.core.GaiaImpl implements IGaia
 	public function popup(url:String, name:String, options:String, handler:String):Void
 	{
 		SWFAddress.popup(url, name, options, handler);
+	}
+	public function getValue():String
+	{
+		return GaiaSWFAddress.getValue();
 	}
 	public function setHistory(value:Boolean):Void
 	{

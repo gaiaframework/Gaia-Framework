@@ -200,7 +200,11 @@ package com.gaiaframework.api
 		 * @return An Array of the class names of all available fonts in the swf.  This array only contains the names of fonts that successfully registered. These names can be passed to getFontName().
 		 */
 		function getAvailableFonts():Array;
-		
+		/**
+		 * @param	assetClass The Class that refers to the custom asset class - Class MUST extend AbstractAsset
+		 * @param	type The type that the custom asset class is associated with in the asset node type attribute.
+		 */
+		function addCustomAsset(assetClass:Class, type:String):void
 		// SWFAddress Proxy
 		/**
 		 * Loads the previous URL in the history list. 
@@ -233,6 +237,11 @@ package com.gaiaframework.api
 		 * @param	handler The handler of the popup window.
 		 */
 		function popup(url:String, name:String, options:String, handler:String = null):void;
+		/**
+		 * Calls SWFAddress.getValue() via a proxy so it always works even at site launch
+		 * @return The string value in the address bar after the #
+		 */
+		function getValue():String;
 		/**
 		 * Turns history tracking in the browser on and off by passing true or false. It is turned on by default, unless you set history="false" in the site.xml site node.
 		 * @param	value A Boolean of "true" to turn history on, and "false" to turn it off.

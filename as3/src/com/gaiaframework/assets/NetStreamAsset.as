@@ -65,13 +65,14 @@ package com.gaiaframework.assets
 		}
 		override public function preload():void
 		{
+			progressTimer.start();
 			_ns.play(src);
 			_ns.pause();
-			progressTimer.start();
 			super.load();
 		}
 		override public function load(...args):void
 		{
+			progressTimer.start();
 			_ns.play(src);
 		}
 		override public function destroy():void

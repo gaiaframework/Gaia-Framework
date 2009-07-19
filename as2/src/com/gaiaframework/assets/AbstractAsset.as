@@ -15,6 +15,7 @@
 import com.gaiaframework.utils.ObservableClass;
 import com.gaiaframework.assets.AssetLoader;
 import com.gaiaframework.events.AssetEvent;
+import com.gaiaframework.assets.PageAsset;
 import com.gaiaframework.core.GaiaImpl;
 import mx.utils.Delegate;
 
@@ -75,6 +76,16 @@ class com.gaiaframework.assets.AbstractAsset extends ObservableClass
 		AssetLoader.instance.abort(this);
 		clearInterval(progressInterval);
 	}
+	public function parseNode(page:PageAsset):Void
+	{
+		_id = _node.attributes.id;
+		if (String(_node.attributes.src).indexOf("http") == 0) _src = _node.attributes.src;
+		else _src = page.assetPath + _node.attributes.src;
+		title = _node.attributes.title;
+		preloadAsset = (_node.attributes.preload != "false");
+		showProgress = (_node.attributes.progress != "false");
+		bytes = Number(_node.attributes.bytes);
+	}
 	public function loadOnDemand():Void {}
 	// stub methods for concrete classes
 	public function init():Void {}
@@ -102,7 +113,6 @@ class com.gaiaframework.assets.AbstractAsset extends ObservableClass
 	{
 		_src = value;
 	}
-	// AS2 Sucks: Explicit setter during site.xml parsing because implicit setter calls getter
 	public function setSrc(value:String):Void
 	{
 		_src = value;

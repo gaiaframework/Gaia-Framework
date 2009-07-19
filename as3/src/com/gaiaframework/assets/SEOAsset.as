@@ -43,7 +43,7 @@ package com.gaiaframework.assets
 			var copyTags:XMLList = html..div.(hasOwnProperty("@id") && @id == "copy")..p;
 			var copyTag:XML;
 			
-			_copy.innerHTML = html..div.(hasOwnProperty("@id") && @id == "copy").toXMLString().replace(/\s+xmlns(:[^=]+)?=\"[^=]*?\"/g, "");
+			_copy.innerHTML = XMLList(html..div.(hasOwnProperty("@id") && @id == "copy").toXMLString().replace(/\s+xmlns(:[^=]+)?=\"[^=]*?\"/g, ""))[0];
 			
 			for each (copyTag in copyTags)
 			{

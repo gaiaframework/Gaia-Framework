@@ -43,7 +43,7 @@ package com.gaiaframework.utils
 		private var _startTime:int = 0;
 		private var _loops:int = 0;
 		
-		private var index:Number;
+		private var _index:Number;
 
 		// Pass as many assets as you want in the group
 		function SoundGroup(...args)
@@ -53,7 +53,7 @@ package com.gaiaframework.utils
 			assets = [];
 			volumes = [];
 			pans = [];
-			index = -1;
+			_index = -1;
 			volume = 1;
 			pan = 0;
 			var i:int;
@@ -81,6 +81,10 @@ package com.gaiaframework.utils
 		}
 		
 		// PUBLIC METHODS
+		public function get index():int
+		{
+			return _index;
+		}
 		public function addSound(sound:ISound):void
 		{
 			var i:int = assets.length;
@@ -164,23 +168,23 @@ package com.gaiaframework.utils
 		// Pick a sound at random and play it
 		public function playRandom(startTime:int = 0, loops:int = 0, repeat:Boolean = true):ISound
 		{
-			var sound:ISound = assets[index = getRandomIndex(repeat)];
+			var sound:ISound = assets[_index = getRandomIndex(repeat)];
 			sound.load(startTime, loops);
 			return sound;
 		}
 		// Play next sound in the array - loop back to beginning if at the end
 		public function playNext(startTime:int = 0, loops:int = 0):ISound
 		{
-			if (++index >= assets.length) index = 0;
-			var sound:ISound = assets[index];
+			if (++_index >= assets.length) _index = 0;
+			var sound:ISound = assets[_index];
 			sound.load(startTime, loops);
 			return sound;
 		}
 		// Play previous sound in the array - loop back to end if at the beginning
 		public function playPrevious(startTime:int = 0, loops:int = 0):ISound
 		{
-			if (--index < 0) index = assets.length - 1;
-			var sound:ISound = assets[index];
+			if (--_index < 0) _index = assets.length - 1;
+			var sound:ISound = assets[_index];
 			sound.load(startTime, loops);
 			return sound;
 		}
@@ -305,7 +309,7 @@ package com.gaiaframework.utils
 		private function getRandomIndex(repeat:Boolean = true):int
 		{
 			var rnd:int = Math.round(Math.random() * (assets.length - 1));
-			if (repeat || rnd != index || assets.length == 1) return rnd;
+			if (repeat || rnd != _index || assets.length == 1) return rnd;
 			return getRandomIndex();
 		}
 		private function checkAllSoundsLoaded(event:TimerEvent):void

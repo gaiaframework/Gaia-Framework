@@ -80,6 +80,7 @@ class com.gaiaframework.assets.PageAsset extends MovieClipAsset
 	}
 	public function transitionOut():Void
 	{
+		GaiaSWFAddress.instance.removeEventListener(GaiaSWFAddressEvent.DEEPLINK, deeplinkDelegate);
 		if (isTransitionedIn && IPage(content) != undefined && IPage(content) != null) 
 		{
 			IPage(content).transitionOut();

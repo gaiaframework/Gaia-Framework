@@ -38,7 +38,7 @@ class com.gaiaframework.utils.SoundGroup extends ObservableClass
 	private var _startTime:Number = 0;
 	private var _loops:Number = 0;
 	
-	private var index:Number;
+	private var _index:Number;
 
 	// Pass as many assets as you want in the group
 	function SoundGroup()
@@ -47,7 +47,7 @@ class com.gaiaframework.utils.SoundGroup extends ObservableClass
 		assets = [];
 		volumes = [];
 		pans = [];
-		index = -1;
+		_index = -1;
 		_volume = 1;
 		_pan = 0;
 		for (var i:Number = 0; i < arguments.length; i++)
@@ -74,6 +74,10 @@ class com.gaiaframework.utils.SoundGroup extends ObservableClass
 	}
 	
 	// PUBLIC METHODS
+	public function get index():Number
+	{
+		return _index;
+	}
 	public function addSound(sound:SoundAsset):Void
 	{
 		var i:Number = assets.length;
@@ -158,23 +162,23 @@ class com.gaiaframework.utils.SoundGroup extends ObservableClass
 	// Pick a sound at random and play it
 	public function playRandom(startTime:Number, loops:Number, repeat:Boolean):SoundAsset
 	{
-		var sound:SoundAsset = assets[index = getRandomIndex(repeat)];
+		var sound:SoundAsset = assets[_index = getRandomIndex(repeat)];
 		sound.load(startTime, loops);
 		return sound;
 	}
 	// Play next sound in the array - loop back to beginning if at the end
 	public function playNext(startTime:Number, loops:Number):SoundAsset
 	{
-		if (++index >= assets.length) index = 0;
-		var sound:SoundAsset = assets[index];
+		if (++_index >= assets.length) _index = 0;
+		var sound:SoundAsset = assets[_index];
 		sound.load(startTime, loops);
 		return sound;
 	}
 	// Play previous sound in the array - loop back to end if at the beginning
 	public function playPrevious(startTime:Number, loops:Number):SoundAsset
 	{
-		if (--index < 0) index = assets.length - 1;
-		var sound:SoundAsset = assets[index];
+		if (--_index < 0) _index = assets.length - 1;
+		var sound:SoundAsset = assets[_index];
 		sound.load(startTime, loops);
 		return sound;
 	}
@@ -299,7 +303,7 @@ class com.gaiaframework.utils.SoundGroup extends ObservableClass
 	private function getRandomIndex(repeat:Boolean):Number
 	{
 		var rnd:Number = Math.round(Math.random() * (assets.length - 1));
-		if (repeat || rnd != index || assets.length == 1) return rnd;
+		if (repeat || rnd != _index || assets.length == 1) return rnd;
 		return getRandomIndex();
 	}
 	private function checkAllSoundsLoaded():Void

@@ -14,8 +14,11 @@
 
 package com.gaiaframework.assets
 {
+	import com.gaiaframework.api.IPageAsset;
 	import com.gaiaframework.events.AssetEvent;
 	import com.gaiaframework.api.IAsset;
+	import flash.events.IEventDispatcher;
+	import flash.events.SecurityErrorEvent;
 	
 	import com.gaiaframework.debug.GaiaDebug;
 	import com.gaiaframework.core.GaiaImpl;
@@ -88,6 +91,44 @@ package com.gaiaframework.assets
 		{
 			GaiaDebug.warn(this + ": " + event);
 			dispatchEvent(new AssetEvent(AssetEvent.ASSET_ERROR, false, false, this));
+		}
+		public function parseNode(page:IPageAsset):void
+		{
+			_id = _node.@id;
+			if (String(_node.@src).indexOf("http") == 0) _src = _node.@src;
+			else _src = page.assetPath + _node.@src;
+			_title = _node.@title;
+			_preloadAsset = (_node.@preload != "false");
+			_showProgress = (_node.@progress != "false");
+			_bytes = int(_node.@bytes);
+		}
+		protected function addListeners(obj:IEventDispatcher):void
+		{
+			try
+			{
+				obj.addEventListener(ProgressEvent.PROGRESS, onProgress, false, 0, true);
+				obj.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
+				obj.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+				obj.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
+			}
+			catch (e:Error)
+			{
+				//
+			}
+		}
+		protected function removeListeners(obj:IEventDispatcher):void
+		{
+			try
+			{
+				obj.removeEventListener(ProgressEvent.PROGRESS, onProgress);
+				obj.removeEventListener(Event.COMPLETE, onComplete);
+				obj.removeEventListener(IOErrorEvent.IO_ERROR, onError);
+				obj.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
+			}
+			catch (e:Error)
+			{
+				//
+			}
 		}
 		internal function loadOnDemand():void {}
 		// Interface Compliance

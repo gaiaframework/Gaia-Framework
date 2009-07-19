@@ -92,6 +92,7 @@ package com.gaiaframework.assets
 		{
 			try
 			{
+				GaiaSWFAddress.instance.removeEventListener(GaiaSWFAddressEvent.DEEPLINK, onDeeplink);
 				if (isTransitionedIn) IPage(_loader.content).transitionOut();
 				else onTransitionOutComplete();
 			}

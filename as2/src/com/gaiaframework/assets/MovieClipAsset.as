@@ -14,6 +14,8 @@
 
 import com.gaiaframework.assets.AbstractAsset;
 import com.gaiaframework.assets.AssetLoader;
+import com.gaiaframework.assets.PageAsset;
+import com.gaiaframework.api.Gaia;
 import mx.utils.Delegate;
 
 class com.gaiaframework.assets.MovieClipAsset extends AbstractAsset
@@ -84,6 +86,13 @@ class com.gaiaframework.assets.MovieClipAsset extends AbstractAsset
 	public function retry():Void
 	{
 		_content.loadMovie(src);
+	}
+	public function parseNode(page:PageAsset):Void 
+	{
+		super.parseNode(page);
+		var d:String = String(_node.attributes.depth).toLowerCase();
+		if (d == Gaia.TOP || d == Gaia.BOTTOM || d == Gaia.MIDDLE || d == Gaia.PRELOADER) depth = d;
+		else depth = page.depth;
 	}
 	
 	// PROXY MOVIECLIP PROPS/FUNCS

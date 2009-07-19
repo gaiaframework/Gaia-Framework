@@ -14,6 +14,7 @@
 
 package com.gaiaframework.core
 {
+	import com.gaiaframework.core.gaia_internal;
 	import com.gaiaframework.debug.GaiaDebug;
 	import com.gaiaframework.events.*;
 	import com.gaiaframework.assets.*;
@@ -33,7 +34,7 @@ package com.gaiaframework.core
 		
 		public function GaiaImpl()
 		{
-			GaiaDebug.log("Gaia Framework (AS3) v3.1.3");
+			GaiaDebug.log("Gaia Framework (AS3) v3.1.6");
 		}
 		public static function birth():IGaia
 		{
@@ -172,6 +173,11 @@ package com.gaiaframework.core
 		{
 			return GaiaFonts.getAvailableFonts();
 		}
+		public function addCustomAsset(assetClass:Class, type:String):void
+		{
+			use namespace gaia_internal;
+			AssetTypes.add(assetClass, type);
+		}
 		// SWFAddress Proxy
 		public function back():void
 		{
@@ -196,6 +202,10 @@ package com.gaiaframework.core
 		public function popup(url:String, name:String, options:String, handler:String = null):void
 		{
 			SWFAddress.popup(url, name, options, handler);
+		}
+		public function getValue():String
+		{
+			return GaiaSWFAddress.getValue();
 		}
 		public function setHistory(value:Boolean):void
 		{

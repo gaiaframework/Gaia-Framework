@@ -196,6 +196,7 @@ package com.gaiaframework.core
 			page.assetPath = node.@assetPath || _assetPath;
 			page.preloadAsset = true;
 			page.menu = (node.@menu == "true");
+			if (page.menu && page.title.toLowerCase() == "about") GaiaDebug.warn('* Warning * "About" is not permitted in Flash context menus');
 			if (page.menu && page.title.length > 0) _menuArray.push(page);
 			page.landing = (node.@landing == "true");
 			// domain

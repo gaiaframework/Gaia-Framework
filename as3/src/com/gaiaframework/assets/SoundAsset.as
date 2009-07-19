@@ -58,9 +58,7 @@ package com.gaiaframework.assets
 		{
 			isActive = true;
 			_sound = new Sound();
-			_sound.addEventListener(ProgressEvent.PROGRESS, onProgress, false, 0, true);
-			_sound.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
-			_sound.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+			addListeners(_sound);
 			_transform = new SoundTransform();
 			super.init();
 		}
@@ -93,9 +91,7 @@ package com.gaiaframework.assets
 		}
 		override protected function onComplete(event:Event):void
 		{
-			_sound.removeEventListener(ProgressEvent.PROGRESS, onProgress);
-			_sound.removeEventListener(Event.COMPLETE, onComplete);
-			_sound.removeEventListener(IOErrorEvent.IO_ERROR, onError);
+			removeListeners(_sound);
 			super.onComplete(event);
 		}		
 		override public function destroy():void
@@ -108,6 +104,7 @@ package com.gaiaframework.assets
 			{
 				// it did not need to be closed so fail gracefully
 			}
+			removeListeners(_sound);
 			if (_channel != null) _channel.stop();
 			_transform = null;
 			_channel = null;

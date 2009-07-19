@@ -40,10 +40,7 @@ package com.gaiaframework.assets
 		{
 			isActive = true;
 			loader = new URLLoader();
-			loader.addEventListener(ProgressEvent.PROGRESS, onProgress, false, 0, true);
-			loader.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
-			loader.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
-			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
+			addListeners(loader);
 			var ext:String = String(src.split(".").pop()).toLowerCase();
 			isNoCache = (ext == "xml" || ext == "css" || ext == "json");
 			super.init();
@@ -57,10 +54,7 @@ package com.gaiaframework.assets
 		override protected function onComplete(event:Event):void
 		{
 			_data = String(event.target.data);
-			loader.removeEventListener(ProgressEvent.PROGRESS, onProgress);
-			loader.removeEventListener(Event.COMPLETE, onComplete);
-			loader.removeEventListener(IOErrorEvent.IO_ERROR, onError);
-			loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
+			removeListeners(loader);
 			super.onComplete(event);
 		}
 		override public function load(...args):void
@@ -73,6 +67,7 @@ package com.gaiaframework.assets
 		}
 		override public function destroy():void 
 		{
+			removeListeners(loader);
 			try
 			{
 				loader.close();

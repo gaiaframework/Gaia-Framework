@@ -16,6 +16,7 @@
 
 package com.gaiaframework.core
 {
+	import com.gaiaframework.assets.AssetTypes;
 	import com.gaiaframework.events.GaiaSWFAddressEvent;
 	import com.gaiaframework.events.GaiaEvent;
 	
@@ -74,6 +75,7 @@ package com.gaiaframework.core
 			if (!__HEIGHT) __HEIGHT = stage.stageHeight;
 			CacheBuster.isOnline = (stage.loaderInfo.url.indexOf("http") == 0);
 			use namespace gaia_internal;
+			AssetTypes.init();
 			Gaia.impl = GaiaImpl.birth();
 			model = new SiteModel(stage.loaderInfo.url);
 			model.addEventListener(Event.COMPLETE, onSiteModelComplete);

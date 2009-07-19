@@ -22,60 +22,21 @@ class com.gaiaframework.assets.AssetCreator
 {	
 	public static function create(node:Object, page:PageAsset):AbstractAsset
 	{
-		var asset:AbstractAsset;
 		var type:String = node.attributes.type.toLowerCase();
 		var ext:String = String(node.attributes.src.split(".").pop()).toLowerCase();
-		if (type == "sound" && ext == "swf")
+		try
 		{
-			asset = new SoundClipAsset();
+			var assetClass:Function = AssetTypes.getClass(type, ext);
+			var asset:AbstractAsset = new assetClass();
+			asset.node = node;
+			asset.parseNode(page);
+			return asset;
 		}
-		else
+		catch (e:Error)
 		{
-			if (ext == "swf" || ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "gif" || type == "sprite" || type =="bitmap" || type == "movieclip") 
-			{
-				asset = new MovieClipAsset();
-				var d:String = String(node.attributes.depth).toLowerCase();
-				if (d == Gaia.TOP || d == Gaia.BOTTOM|| d == Gaia.MIDDLE || d == Gaia.PRELOADER)
-				{
-					MovieClipAsset(asset).depth = d;
-				}
-				else
-				{
-					MovieClipAsset(asset).depth = page.depth;
-				}
-			}
-			else if (ext == "xml" || type == "xml")
-			{
-				asset = new XMLAsset();
-			}
-			else if (ext == "mp3" || ext == "wav" || type == "sound")
-			{
-				asset = new SoundAsset();
-				SoundAsset(asset).streaming = (node.attributes.streaming == "true");
-			}
-			else if (ext == "flv" || type == "netstream")
-			{
-				asset = new NetStreamAsset();
-			}
-			else if (ext == "css" || type == "stylesheet")
-			{
-				asset = new StyleSheetAsset();
-			}
-			else
-			{
-				throw new Error("Unknown Asset Type :: " + ext);
-				return null;
-			}
+			throw new Error("Unknown asset type " + type + " | " + ext);
 		}
-		asset.node = node;
-		asset.id = node.attributes.id;
-		if (String(node.attributes.src).indexOf("http") == 0) asset.setSrc(node.attributes.src);
-		else asset.setSrc(page.assetPath + node.attributes.src);		
-		asset.title = node.attributes.title;
-		asset.preloadAsset = (node.attributes.preload != "false");
-		asset.showProgress = (node.attributes.progress != "false");
-		asset.bytes = Number(node.attributes.bytes || 0);
-		return asset;
+		return null;
 	}
 	public static function add(nodes:Array, page:PageAsset):Void
 	{

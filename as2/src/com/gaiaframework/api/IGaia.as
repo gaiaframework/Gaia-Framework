@@ -45,6 +45,7 @@ interface com.gaiaframework.api.IGaia
 	function setLoadTimeout(value:Number):Void;
 	function setPreloaderDelay(value:Number):Void;
 	function setGlobalVolume(value:Number, duration:Number, onComplete:Function):Void;
+	function addCustomAsset(assetClass:Function, type:String):Void;
 	
 	// SWFAddress Proxy
 	function back():Void;
@@ -53,6 +54,7 @@ interface com.gaiaframework.api.IGaia
 	function setTitle(title:String):Void;
 	function href(url:String, target:String):Void;
 	function popup(url:String, name:String, options:String, handler:String):Void;
+	function getValue():String;
 	function setHistory(value:Boolean):Void;
 	function getHistory():Boolean;
 	function setTracker(value:String):Void;

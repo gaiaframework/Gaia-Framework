@@ -14,6 +14,7 @@
 
 import com.gaiaframework.assets.AbstractAsset;
 import com.gaiaframework.assets.AssetLoader;
+import com.gaiaframework.assets.PageAsset;
 import com.gaiaframework.utils.SoundUtils;
 import mx.utils.Delegate;
 
@@ -147,6 +148,11 @@ class com.gaiaframework.assets.SoundAsset extends AbstractAsset
 	{
 		_sound.loadSound(src, isStreaming);
 		_sound.stop();
+	}
+	public function parseNode(page:PageAsset):Void 
+	{
+		super.parseNode(page);
+		isStreaming = (_node.attributes.streaming == "true");
 	}
 	private function onEventSoundLoaded():Void
 	{

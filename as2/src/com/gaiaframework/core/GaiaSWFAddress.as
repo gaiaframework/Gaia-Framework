@@ -19,6 +19,7 @@ import com.gaiaframework.events.GaiaEvent;
 import com.gaiaframework.debug.GaiaDebug;
 import com.gaiaframework.core.BranchTools;
 import com.gaiaframework.core.SiteModel;
+import com.gaiaframework.api.Gaia;
 import com.asual.swfaddress.*;
 import mx.utils.Delegate;
 
@@ -30,12 +31,14 @@ class com.gaiaframework.core.GaiaSWFAddress extends ObservableClass
 	private static var _deeplink:String = "";	
 	private var _value:String = "/";	
 	private var isInternal:Boolean = false;
-	public static var isSinglePage:Boolean = false;
 	
 	private static var rootBranch:String;
+	public static var isSinglePage:Boolean = false;
 	
 	private var lastValidBranch:String;
 	private var lastFullBranch:String;
+	
+	private var indexFirstEvent:SWFAddressEvent;
 	
 	private static var _instance:GaiaSWFAddress;
 	
@@ -47,6 +50,11 @@ class com.gaiaframework.core.GaiaSWFAddress extends ObservableClass
 	{
 		rootBranch = s;
 		if (_instance == null) _instance = new GaiaSWFAddress();
+		if (SiteModel.indexFirst)
+		{
+			SWFAddress.addEventListener(SWFAddressEvent.CHANGE, Delegate.create(_instance, _instance.onIndexFirstChange));
+			SWFAddress.setHistory(false);
+		}
 	}
 	public static function get instance():GaiaSWFAddress
 	{
@@ -55,14 +63,32 @@ class com.gaiaframework.core.GaiaSWFAddress extends ObservableClass
 	public static function get deeplink():String
 	{
 		return _deeplink;
-	}	
+	}
+	public static function getValue():String
+	{
+		var v:String = SWFAddress.getValue();
+		if (v == "/" && rootBranch && rootBranch.length > 0)
+		{
+			var validBranch:String = BranchTools.getValidBranch(rootBranch);
+			_deeplink = rootBranch.substring(validBranch.length, rootBranch.length);
+			return "/" + Gaia.api.getPage(validBranch).route + _deeplink;
+		}
+		return v;
+	}
 	public function init():Void 
 	{
-		SWFAddress.addEventListener(SWFAddressEvent.CHANGE, Delegate.create(this, onChange));
-		SWFAddress.setHistory(false);
-		var v:String = SWFAddress.getValue();
-		if (v == "/") v = insertStrictSlashes();
-		if (v != "/") SWFAddress.setValue(v);
+		if (!SiteModel.indexFirst)
+		{
+			SWFAddress.addEventListener(SWFAddressEvent.CHANGE, Delegate.create(this, onChange));
+			SWFAddress.setHistory(false);
+			var v:String = SWFAddress.getValue();
+			if (v != "/") SWFAddress.setValue(v);
+		}
+		else
+		{
+			onChange(indexFirstEvent);
+			indexFirstEvent = null;
+		}
 	}
 	public function onGoto(event:GaiaEvent):Void
 	{
@@ -86,25 +112,30 @@ class com.gaiaframework.core.GaiaSWFAddress extends ObservableClass
 			isInternal = false;
 		}
 	}
-	public function onChange(event:SWFAddressEvent):Void 
+	private function onIndexFirstChange(event:SWFAddressEvent):Void
+	{
+		indexFirstEvent = event;
+		SWFAddress.removeEventListener(SWFAddressEvent.CHANGE, onIndexFirstChange);
+		SWFAddress.addEventListener(SWFAddressEvent.CHANGE, onChange);
+	}
+	private function onChange(event:SWFAddressEvent):Void 
 	{
 		_value = stripStrictSlashes(event.value);
-		dispatchDeeplink();
+		var validBranch:String = checkDeeplink();
 		if (!isInternal)
 		{
 			if (_value.length > 1) 
 			{
+				var validated:String = validate(_value);
 				if (SiteModel.routing)
 				{
-					var validRoute:String = validate(_value);
-					if (validRoute.length > 0) dispatchGoto(SiteModel.routes[validRoute] + _deeplink);
+					if (validated.length > 0) dispatchGoto(SiteModel.routes[validated] + _deeplink);
 					else if (isSinglePage) dispatchGoto(SiteModel.indexID + _deeplink);
 					else dispatchGoto(SiteModel.indexID);
 				}
 				else 
 				{
-					var validBranch:String = validate(_value);
-					dispatchGoto(validBranch);
+					dispatchGoto(validated);
 				}
 			} 
 			else 
@@ -119,20 +150,25 @@ class com.gaiaframework.core.GaiaSWFAddress extends ObservableClass
 				}
 			}
 		}
+		dispatchDeeplink(validBranch);
 	}
 	private function dispatchGoto(branch:String):Void
 	{
 		dispatchEvent(new GaiaSWFAddressEvent(GaiaSWFAddressEvent.GOTO, this, _deeplink, branch));
 	}
-	private function dispatchDeeplink():Void 
+	private function dispatchDeeplink(validBranch:String):Void 
+	{
+		dispatchEvent(new GaiaSWFAddressEvent(GaiaSWFAddressEvent.DEEPLINK, this, _deeplink, validBranch));
+	}
+	private function checkDeeplink():String
 	{
 		_deeplink = "";
 		var validated:String = validate(_value);
-		var validBranch:String = SiteModel.routes[validated] || "";
+		var validBranch:String = SiteModel.routing ? SiteModel.routes[validated] || "" : "";
 		if (validated.length > 0 || isSinglePage) _deeplink = _value.substring(validated.length, _value.length);
 		if (isSinglePage && _deeplink.length > 0) _deeplink = "/" + _deeplink;
-		if (_deeplink.length > 0) GaiaDebug.log("deeplink", _deeplink);
-		dispatchEvent(new GaiaSWFAddressEvent(GaiaSWFAddressEvent.DEEPLINK, this, _deeplink, validBranch));
+		//if (_deeplink.length > 0) GaiaDebug.log("deeplink = " + _deeplink);
+		return validBranch;
 	}
 	private function validate(str:String):String
 	{

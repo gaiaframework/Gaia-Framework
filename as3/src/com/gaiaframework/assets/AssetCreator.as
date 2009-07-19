@@ -24,78 +24,21 @@ package com.gaiaframework.assets
 	{
 		public static function create(node:XML, page:IPageAsset):AbstractAsset
 		{
-			var asset:AbstractAsset;
 			var type:String = String(node.@type).toLowerCase();
 			var ext:String = String(node.@src.split(".").pop()).toLowerCase();
-			if (type == "bytearray")
+			try
 			{
-				asset = new ByteArrayAsset();
+				var assetClass:Class = AssetTypes.getClass(type, ext);
+				var asset:AbstractAsset = new assetClass();
+				asset.node = node;
+				asset.parseNode(page);
+				return asset;
 			}
-			else if (ext == "swf" || ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "gif" || type =="bitmap" || type == "sprite" || type == "movieclip") 
+			catch (e:Error)
 			{
-				var d:String;
-				if (ext == "swf" || type == "movieclip")
-				{
-					asset = new MovieClipAsset();
-					d = String(node.@domain).toLowerCase();
-					if (d == Gaia.DOMAIN_NEW || d == Gaia.DOMAIN_CURRENT) SpriteAsset(asset).domain = d;
-				}
-				else if (type == "sprite")
-				{
-					asset = new BitmapSpriteAsset();
-				}
-				else
-				{
-					asset = new BitmapAsset();
-				}
-				d = String(node.@depth).toLowerCase();
-				if (d == Gaia.TOP || d == Gaia.BOTTOM || d == Gaia.MIDDLE || d == Gaia.PRELOADER || d == Gaia.NESTED)
-				{
-					DisplayObjectAsset(asset).depth = d;
-				}
-				else 
-				{
-					DisplayObjectAsset(asset).depth = page.depth;
-				}
+				throw new Error("Unknown asset type " + type + " | " + ext);
 			}
-			else if (ext == "xml" || type == "xml")
-			{
-				asset = new XMLAsset();
-			}
-			else if (ext == "mp3" || ext == "wav" || type == "sound")
-			{
-				asset = new SoundAsset();
-			}
-			else if (ext == "flv" || ext == "m4a" || ext == "f4v" || type == "netstream")
-			{
-				asset = new NetStreamAsset();
-			}
-			else if (ext == "css" || type == "stylesheet")
-			{
-				asset = new StyleSheetAsset();
-			}
-			else if (ext == "json" || type == "json")
-			{
-				asset = new JSONAsset();
-			}
-			else if (ext == "txt" || type == "text")
-			{
-				asset = new TextAsset();
-			}
-			else
-			{
-				throw new Error("Unknown asset type " + ext + " | " + type);
-				return null;
-			}
-			asset.node = node;
-			asset.id = node.@id;
-			if (String(node.@src).indexOf("http") == 0) asset.src = node.@src;
-			else asset.src = page.assetPath + node.@src;
-			asset.title = node.@title;
-			asset.preloadAsset = (node.@preload != "false");
-			asset.showProgress = (node.@progress != "false");
-			asset.bytes = int(node.@bytes);
-			return asset;
+			return null;
 		}
 		public static function add(nodes:XMLList, page:IPageAsset):void
 		{

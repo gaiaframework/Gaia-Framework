@@ -41,10 +41,7 @@ package com.gaiaframework.assets
 			isActive = true;
 			loader = new URLLoader();
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
-			loader.addEventListener(ProgressEvent.PROGRESS, onProgress, false, 0, true);
-			loader.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
-			loader.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
-			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
+			addListeners(loader);
 			super.init();
 		}
 		override public function preload():void
@@ -56,10 +53,7 @@ package com.gaiaframework.assets
 		override protected function onComplete(event:Event):void
 		{
 			_data = loader.data as ByteArray;
-			loader.removeEventListener(ProgressEvent.PROGRESS, onProgress);
-			loader.removeEventListener(Event.COMPLETE, onComplete);
-			loader.removeEventListener(IOErrorEvent.IO_ERROR, onError);
-			loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
+			removeListeners(loader);
 			super.onComplete(event);
 		}
 		override public function load(...args):void
@@ -72,6 +66,7 @@ package com.gaiaframework.assets
 		}
 		override public function destroy():void 
 		{
+			removeListeners(loader);
 			try
 			{
 				loader.close();

@@ -15,6 +15,7 @@
 package com.gaiaframework.assets
 {
 	import com.gaiaframework.api.IDisplayObject;
+	import com.gaiaframework.api.IPageAsset;
 	import com.gaiaframework.events.AssetEvent;
 	import com.gaiaframework.events.PageEvent;
 	import com.gaiaframework.debug.GaiaDebug;
@@ -55,18 +56,17 @@ package com.gaiaframework.assets
 			if (_loader != null) destroy();
 			_loader = new Loader();
 			_loader.visible = false;
-			_loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgress, false, 0, true);
-			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
-			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+			addListeners(_loader.contentLoaderInfo);
 			super.init();
 		}
 		override public function preload():void
 		{
 			try 
 			{
-				loaderContext = null;
 				if (_domain == Gaia.DOMAIN_NEW) loaderContext = new LoaderContext(true, new ApplicationDomain());
 				else if (_domain == Gaia.DOMAIN_CURRENT) loaderContext = new LoaderContext(true, ApplicationDomain.currentDomain);
+				else loaderContext = new LoaderContext(true);
+				loaderContext.checkPolicyFile = true;
 				_loader.load(request, loaderContext);
 			}
 			catch (error:Error)
@@ -83,13 +83,20 @@ package com.gaiaframework.assets
 		{
 			preload();
 		}
+		override public function parseNode(page:IPageAsset):void 
+		{
+			super.parseNode(page);
+			var d:String = String(_node.@domain).toLowerCase();
+			if (d == Gaia.DOMAIN_NEW || d == Gaia.DOMAIN_CURRENT) _domain = d;
+			d = String(_node.@depth).toLowerCase();
+			if (d == Gaia.TOP || d == Gaia.BOTTOM || d == Gaia.MIDDLE || d == Gaia.PRELOADER || d == Gaia.NESTED) _depth = d;
+			else _depth = page.depth;
+		}
 		override public function destroy():void 
 		{
 			if (_loader != null)
 			{
-				_loader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, onProgress);
-				_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onComplete);
-				_loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onError);
+				removeListeners(_loader.contentLoaderInfo);
 				if (_loader.parent) _loader.parent.removeChild(_loader);
 				try
 				{
@@ -136,6 +143,7 @@ package com.gaiaframework.assets
 		}
 		override protected function onComplete(event:Event):void
 		{
+			removeListeners(_loader.contentLoaderInfo);
 			_loader.content.visible = false;
 			_loader.visible = true;
 			super.onComplete(event);

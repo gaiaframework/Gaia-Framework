@@ -44,6 +44,11 @@ class com.gaiaframework.assets.SEOAsset extends XMLAsset
 		{
 			_copy[div.p[i].attributes.id] = div.p[i].toString();
 		}
+		var raw:String = xml.toString();
+		var start:Number = raw.indexOf('<div id="copy">');
+		start = raw.indexOf('<p', start);
+		var end:Number = raw.indexOf('</div>', start);
+		_copy.innerHTML = raw.substring(start, end);	
 		super.onComplete();
 	}
 	private function findCopyDiv(nodes:Array):Object

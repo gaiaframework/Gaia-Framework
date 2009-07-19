@@ -16,6 +16,7 @@
 
 import com.gaiaframework.utils.ObservableClass;
 import com.gaiaframework.assets.AssetLoader;
+import com.gaiaframework.assets.AssetTypes;
 import com.gaiaframework.utils.CacheBuster;
 import com.gaiaframework.flow.FlowManager;
 import com.gaiaframework.api.Gaia;
@@ -49,6 +50,7 @@ class com.gaiaframework.core.GaiaMain extends ObservableClass
 		GaiaDebug.isBrowser = (System.capabilities.playerType == "ActiveX" || System.capabilities.playerType == "PlugIn" || System.capabilities.playerType == "StandAlone");
 		CacheBuster.isOnline = (_root._url.indexOf("http") == 0);
 		clip = target.createEmptyMovieClip("site", target.getNextHighestDepth());
+		AssetTypes.init();
 		Gaia.api = GaiaImpl.birth();
 		model = new SiteModel();
 		model.addEventListener(Event.COMPLETE, Delegate.create(this, onSiteModelComplete));
