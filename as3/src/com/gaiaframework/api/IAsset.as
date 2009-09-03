@@ -19,13 +19,13 @@ package com.gaiaframework.api
 	/**
 	 * Dispatched when the asset is finished loading. Used with on-demand assets.
 	 * The <code>target</code> or <code>asset</code> property 
-	 * @eventType com.gaiaflashframework.events.AssetEvent.ASSET_COMPLETE
+	 * @eventType com.gaiaframework.events.AssetEvent.ASSET_COMPLETE
 	 */
-	[Event(name = "assetComplete", type = "com.gaiaflashframework.events.AssetEvent")]
+	[Event(name = "assetComplete", type = "com.gaiaframework.events.AssetEvent")]
 	/**
 	 * @private
 	 */
-	[Event(name = "assetProgress", type = "com.gaiaflashframework.events.AssetEvent")]
+	[Event(name = "assetProgress", type = "com.gaiaframework.events.AssetEvent")]
 	
 	/**
 	 * This is the interface of the abstract asset class for all concrete asset classes.

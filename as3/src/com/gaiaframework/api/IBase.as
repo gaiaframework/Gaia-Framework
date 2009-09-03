@@ -18,24 +18,24 @@ package com.gaiaframework.api
 	
 	/**
 	 * Dispatched when a page's <code>transitionIn</code> is called by Gaia.
-	 * @eventType com.gaiaflashframework.events.PageEvent.TRANSITION_IN
+	 * @eventType com.gaiaframework.events.PageEvent.TRANSITION_IN
 	 */
-	[Event(name = "transitionIn", type = "com.gaiaflashframework.events.PageEvent")]
+	[Event(name = "transitionIn", type = "com.gaiaframework.events.PageEvent")]
 	/**
 	 * Dispatched when a page's <code>transitionOut</code> is called by Gaia.
-	 * @eventType com.gaiaflashframework.events.PageEvent.TRANSITION_OUT
+	 * @eventType com.gaiaframework.events.PageEvent.TRANSITION_OUT
 	 */
-	[Event(name = "transitionOut", type = "com.gaiaflashframework.events.PageEvent")]
+	[Event(name = "transitionOut", type = "com.gaiaframework.events.PageEvent")]
 	/**
 	 * Dispatched to Gaia when a page is finished transitioning in.
-	 * @eventType com.gaiaflashframework.events.PageEvent.TRANSITION_IN_COMPLETE
+	 * @eventType com.gaiaframework.events.PageEvent.TRANSITION_IN_COMPLETE
 	 */
-	[Event(name = "transitionInComplete", type = "com.gaiaflashframework.events.PageEvent")]
+	[Event(name = "transitionInComplete", type = "com.gaiaframework.events.PageEvent")]
 	/**
 	 * Dispatched to Gaia when a page is finished transitioning out.
-	 * @eventType com.gaiaflashframework.events.PageEvent.TRANSITION_OUT_COMPLETE
+	 * @eventType com.gaiaframework.events.PageEvent.TRANSITION_OUT_COMPLETE
 	 */
-	[Event(name = "transitionOutComplete", type = "com.gaiaflashframework.events.PageEvent")]
+	[Event(name = "transitionOutComplete", type = "com.gaiaframework.events.PageEvent")]
 	
 	/**
 	 * This is the interface of the base for <code>IPage</code> and <code>IPreloader</code>.  It contains Gaia's four method conventions.

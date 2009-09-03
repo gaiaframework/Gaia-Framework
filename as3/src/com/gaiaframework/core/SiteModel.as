@@ -46,6 +46,8 @@ package com.gaiaframework.core
 		private static var _indexFirst:Boolean;
 		private static var _indexID:String;
 		private static var _assetPath:String;
+		private static var _domain:String;
+		private static var _version:String;
 		
 		function SiteModel(d:String)
 		{
@@ -133,6 +135,14 @@ package com.gaiaframework.core
 		{ 
 			return _indexID; 
 		}
+		public static function get domain():String
+		{
+			return _domain;
+		}
+		public static function get version():String
+		{
+			return _version;
+		}
 		private function onLoadComplete(event:Event):void
 		{
 			_xml = XML(event.target.data);
@@ -151,13 +161,18 @@ package com.gaiaframework.core
 			_history = !(_xml.@history == "false");
 			_indexFirst = (_xml.@indexFirst == "true");
 			_assetPath = _xml.@assetPath || "";
+			_version = _xml.@version || "";
+			// appDomain
+			var appDomain:String = String(_xml.@domain).toLowerCase();
+			if (appDomain == Gaia.DOMAIN_CURRENT ||appDomain == Gaia.DOMAIN_NEW) _domain = appDomain;
+			else _domain = Gaia.DOMAIN_NULL;
 			// preloaderDepth
 			var depth:String = String(_xml.@preloaderDepth).toLowerCase();
 			if (depth == Gaia.MIDDLE || depth == Gaia.BOTTOM) _preloaderDepth = depth;
 			else _preloaderDepth = Gaia.TOP;
 			// preloaderDomain
-			var domain:String = String(_xml.@preloaderDomain).toLowerCase();
-			if (domain == Gaia.DOMAIN_CURRENT || domain == Gaia.DOMAIN_NEW) _preloaderDomain = domain;
+			appDomain = String(_xml.@preloaderDomain).toLowerCase();
+			if (appDomain == Gaia.DOMAIN_CURRENT || appDomain == Gaia.DOMAIN_NEW) _preloaderDomain = appDomain;
 			else _preloaderDomain = Gaia.DOMAIN_NULL;
 			// defaultFlow
 			var flow:String = String(_xml.@flow).toLowerCase();

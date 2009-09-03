@@ -329,13 +329,11 @@ package com.gaiaframework.api
 		 */
 		function afterTransitionIn(target:Function, hijack:Boolean = false, onlyOnce:Boolean = false):Function;
 		/**
-		 * The afterComplete event fires after the flow is complete. Passing true for hijack has no effect here as it's forced to be false by the API. This is because the afterComplete event fires at the end of the flow so hijacking would be pointless. 
+		 * The afterComplete event fires after the flow is complete. This event cannot be hijacked as it's forced to be false by the API. This is because the afterComplete event fires at the end of the flow so hijacking would be pointless. 
 		 * @param	target A function that is the listener.
-		 * @param	hijack Make the framework wait for you to tell it to continue by calling the function that is returned with this function. 
 		 * @param	onlyOnce Only listen for this event once and then automatically remove the target as a listener. 
-		 * @return  If hijack is <code>true</code>, returns the function that will release Gaia, otherwise returns null.
 		 */
-		function afterComplete(target:Function, hijack:Boolean = false, onlyOnce:Boolean = false):Function;
+		function afterComplete(target:Function, onlyOnce:Boolean = false):Function;
 		/**
 		 * Removes the beforeGoto event listener
 		 * @param	target A function that is the listener.

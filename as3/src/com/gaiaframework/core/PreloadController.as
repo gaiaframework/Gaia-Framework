@@ -31,6 +31,8 @@ package com.gaiaframework.core
 	{
 		public static const READY:String = "ready";
 		
+		private static var timerDelay:int = 150;
+		
 		private var showTimer:Timer = new Timer(150, 1);
 
 		private var isComplete:Boolean = false;
@@ -45,9 +47,9 @@ package com.gaiaframework.core
 			init(value);
 			showTimer.addEventListener(TimerEvent.TIMER, onShow);
 		}
-		public function set delay(value:int):void
+		public static function set delay(value:int):void
 		{
-			showTimer.delay = Math.max(1, value);
+			timerDelay = value;
 		}
 		public function get clip():IPreloader
 		{
@@ -85,6 +87,7 @@ package com.gaiaframework.core
 		{
 			if (_preloader == null) _preloader = IPreloader(_default.content);
 			isComplete = false;
+			showTimer.delay = Math.max(1, timerDelay);
 			showTimer.start();
 		}
 		public function onProgress(event:AssetEvent):void

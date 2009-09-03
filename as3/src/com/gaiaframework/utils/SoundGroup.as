@@ -21,7 +21,7 @@ package com.gaiaframework.utils
 	import flash.media.SoundTransform;
 	import flash.utils.Timer;
 
-	[Event(name = "allSoundsLoaded", type = "com.gaiaflashframework.events.SoundGroupEvent")]
+	[Event(name = "allSoundsLoaded", type = "com.gaiaframework.events.SoundGroupEvent")]
 	
 	public class SoundGroup extends EventDispatcher
 	{

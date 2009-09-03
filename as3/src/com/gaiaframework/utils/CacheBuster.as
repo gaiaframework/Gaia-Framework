@@ -14,6 +14,8 @@
 
 package com.gaiaframework.utils
 {
+	import com.gaiaframework.core.SiteModel;
+	
 	public class CacheBuster
 	{
 		public static var isOnline:Boolean = false;
@@ -26,6 +28,16 @@ package com.gaiaframework.utils
 				var nc:String = "nocache=" + d.getTime();
 				if (url.indexOf("?") > -1) return url + "&" + nc;
 				return url + "?" + nc;
+			}
+			return url;
+		}
+		public static function version(url:String):String
+		{
+			if (isOnline && SiteModel.version) 
+			{
+				var v:String = "gaiaSiteVersion=" + SiteModel.version;
+				if (url.indexOf("?") > -1) return url + "&" + v;
+				return url + "?" + v;
 			}
 			return url;
 		}

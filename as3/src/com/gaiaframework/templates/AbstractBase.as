@@ -18,10 +18,10 @@ package com.gaiaframework.templates
 	import com.gaiaframework.api.IBase;
 	import flash.display.MovieClip;
 	
-	[Event(name = "transitionIn", type = "com.gaiaflashframework.events.PageEvent")]
-	[Event(name = "transitionOut", type = "com.gaiaflashframework.events.PageEvent")]
-	[Event(name = "transitionInComplete", type = "com.gaiaflashframework.events.PageEvent")]
-	[Event(name = "transitionOutComplete", type = "com.gaiaflashframework.events.PageEvent")]
+	[Event(name = "transitionIn", type = "com.gaiaframework.events.PageEvent")]
+	[Event(name = "transitionOut", type = "com.gaiaframework.events.PageEvent")]
+	[Event(name = "transitionInComplete", type = "com.gaiaframework.events.PageEvent")]
+	[Event(name = "transitionOutComplete", type = "com.gaiaframework.events.PageEvent")]
 	
 	public class AbstractBase extends MovieClip implements IBase
 	{

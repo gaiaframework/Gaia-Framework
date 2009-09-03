@@ -26,9 +26,10 @@ import mx.utils.Delegate;
 class com.gaiaframework.core.PreloadController extends ObservableClass
 {
 	public static var READY:String = "ready";
+	
+	private static var showDelay:Number = 150;
 		
 	private var showInterval:Number;
-	private var showDelay:Number = 150;
 	
 	private var isComplete:Boolean = false;
 	
@@ -46,7 +47,7 @@ class com.gaiaframework.core.PreloadController extends ObservableClass
 		defaultLoadedDelegate = Delegate.create(this, onDefaultLoaded);
 		init(asset);
 	}
-	public function set delay(value:Number):Void
+	public static function set delay(value:Number):Void
 	{
 		showDelay = Math.max(1, value);
 	}

@@ -26,29 +26,29 @@ package com.gaiaframework.api
 	[Event(name = "netStatus", type = "flash.events.NetStatusEvent")]
 	/**
 	 * Dispatched when the NetStream's onMetaData event is received
-	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.METADATA
+	 * @eventType com.gaiaframework.events.NetStreamAssetEvent.METADATA
 	 */
-	[Event(name = "metaData", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	[Event(name = "metaData", type = "com.gaiaframework.events.NetStreamAssetEvent")]
 	/**
 	 * Dispatched when the NetStream's onCuePoint event is received
-	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.CUEPOINT
+	 * @eventType com.gaiaframework.events.NetStreamAssetEvent.CUEPOINT
 	 */
-	[Event(name = "cuePoint", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	[Event(name = "cuePoint", type = "com.gaiaframework.events.NetStreamAssetEvent")]
 	/**
 	 * Dispatched when the NetStream's onImageData event is received
-	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.IMAGE_DATA
+	 * @eventType com.gaiaframework.events.NetStreamAssetEvent.IMAGE_DATA
 	 */
-	[Event(name = "imageData", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	[Event(name = "imageData", type = "com.gaiaframework.events.NetStreamAssetEvent")]
 	/**
 	 * Dispatched when the NetStream's onTextData event is received
-	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.TEXT_DATA
+	 * @eventType com.gaiaframework.events.NetStreamAssetEvent.TEXT_DATA
 	 */
-	[Event(name = "textData", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	[Event(name = "textData", type = "com.gaiaframework.events.NetStreamAssetEvent")]
 	/**
 	 * Dispatched when the NetStream's onXMPData event is received
-	 * @eventType com.gaiaflashframework.events.NetStreamAssetEvent.XMP_DATA
+	 * @eventType com.gaiaframework.events.NetStreamAssetEvent.XMP_DATA
 	 */
-	[Event(name = "xmpData", type = "com.gaiaflashframework.events.NetStreamAssetEvent")]
+	[Event(name = "xmpData", type = "com.gaiaframework.events.NetStreamAssetEvent")]
 	/**
 	 * Dispatched when the NetStream's fires an AsyncErrorEvent
 	 * @eventType flash.events.AsyncErrorEvent.ASYNC_ERROR

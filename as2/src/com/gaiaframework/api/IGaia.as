@@ -74,7 +74,7 @@ interface com.gaiaframework.api.IGaia
 	function beforeTransitionIn(target:Function, hijack:Boolean, onlyOnce:Boolean):Function;
 	function afterTransitionIn(target:Function, hijack:Boolean, onlyOnce:Boolean):Function;
 	
-	function afterComplete(target:Function, hijack:Boolean, onlyOnce:Boolean):Function;
+	function afterComplete(target:Function, onlyOnce:Boolean):Function;
 	
 	// Remove hijack Events (just in case you need to manually)
 	function removeBeforeGoto(target:Function):Void;

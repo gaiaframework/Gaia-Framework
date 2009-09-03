@@ -14,14 +14,16 @@
 
 package com.gaiaframework.assets
 {
-	import com.gaiaframework.api.IPageAsset;
-	import com.gaiaframework.events.AssetEvent;
 	import com.gaiaframework.api.IAsset;
+	import com.gaiaframework.api.IPageAsset;
+	import com.gaiaframework.core.GaiaImpl;
+	import com.gaiaframework.core.SiteModel;
+	import com.gaiaframework.debug.GaiaDebug;
+	import com.gaiaframework.events.AssetEvent;
+	import com.gaiaframework.utils.CacheBuster;	
+	
 	import flash.events.IEventDispatcher;
 	import flash.events.SecurityErrorEvent;
-	
-	import com.gaiaframework.debug.GaiaDebug;
-	import com.gaiaframework.core.GaiaImpl;
 	
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
@@ -30,8 +32,8 @@ package com.gaiaframework.assets
 		
 	import flash.net.URLRequest;
 	
-	[Event(name = "assetComplete", type = "com.gaiaflashframework.events.AssetEvent")]
-	[Event(name = "assetProgress", type = "com.gaiaflashframework.events.AssetEvent")]
+	[Event(name = "assetComplete", type = "com.gaiaframework.events.AssetEvent")]
+	[Event(name = "assetProgress", type = "com.gaiaframework.events.AssetEvent")]
 	
 	public class AbstractAsset extends EventDispatcher implements IAsset
 	{
@@ -54,7 +56,7 @@ package com.gaiaframework.assets
 		}
 		public function init():void 
 		{
-			request = new URLRequest(src);
+			request = new URLRequest(CacheBuster.version(src));
 		}
 		public function load(...args):void
 		{

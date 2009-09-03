@@ -16,6 +16,7 @@ package com.gaiaframework.assets
 {
 	import com.gaiaframework.api.IDisplayObject;
 	import com.gaiaframework.api.IPageAsset;
+	import com.gaiaframework.core.SiteModel;
 	import com.gaiaframework.events.AssetEvent;
 	import com.gaiaframework.events.PageEvent;
 	import com.gaiaframework.debug.GaiaDebug;
@@ -88,6 +89,7 @@ package com.gaiaframework.assets
 			super.parseNode(page);
 			var d:String = String(_node.@domain).toLowerCase();
 			if (d == Gaia.DOMAIN_NEW || d == Gaia.DOMAIN_CURRENT) _domain = d;
+			else _domain = SiteModel.domain;
 			d = String(_node.@depth).toLowerCase();
 			if (d == Gaia.TOP || d == Gaia.BOTTOM || d == Gaia.MIDDLE || d == Gaia.PRELOADER || d == Gaia.NESTED) _depth = d;
 			else _depth = page.depth;

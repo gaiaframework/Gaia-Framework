@@ -34,7 +34,7 @@ package com.gaiaframework.core
 		
 		public function GaiaImpl()
 		{
-			GaiaDebug.log("Gaia Framework (AS3) v3.1.6");
+			GaiaDebug.log("Gaia Framework (AS3) v3.1.7");
 		}
 		public static function birth():IGaia
 		{
@@ -154,7 +154,7 @@ package com.gaiaframework.core
 		}
 		public function setPreloaderDelay(value:int):void
 		{
-			SiteController.getPreloader().delay = value;
+			PreloadController.delay = value;
 		}
 		public function setGlobalVolume(value:Number, duration:Number = 0, onComplete:Function = null):void
 		{
@@ -265,7 +265,7 @@ package com.gaiaframework.core
 			return GaiaHQ.instance.addListener(GaiaEvent.AFTER_TRANSITION_IN, target, hijack, onlyOnce);
 		}
 		
-		public function afterComplete(target:Function, hijack:Boolean = false, onlyOnce:Boolean = false):Function
+		public function afterComplete(target:Function, onlyOnce:Boolean = false):Function
 		{
 			return GaiaHQ.instance.addListener(GaiaEvent.AFTER_COMPLETE, target, false, onlyOnce);
 		}

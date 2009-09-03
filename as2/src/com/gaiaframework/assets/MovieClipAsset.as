@@ -12,10 +12,11 @@
 * http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
+import com.gaiaframework.api.Gaia;
 import com.gaiaframework.assets.AbstractAsset;
 import com.gaiaframework.assets.AssetLoader;
 import com.gaiaframework.assets.PageAsset;
-import com.gaiaframework.api.Gaia;
+import com.gaiaframework.utils.CacheBuster;
 import mx.utils.Delegate;
 
 class com.gaiaframework.assets.MovieClipAsset extends AbstractAsset
@@ -51,7 +52,7 @@ class com.gaiaframework.assets.MovieClipAsset extends AbstractAsset
 	}
 	public function loadOnDemand():Void
 	{
-		_content.loadMovie(src);
+		_content.loadMovie(CacheBuster.version(src));
 		super.load();
 	}
 	public function getBytesLoaded():Number

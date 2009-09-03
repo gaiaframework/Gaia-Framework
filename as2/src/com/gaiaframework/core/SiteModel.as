@@ -44,6 +44,7 @@ class com.gaiaframework.core.SiteModel extends ObservableClass
 	private static var _indexFirst:Boolean;
 	private static var _indexID:String;
 	private static var _assetPath:String;
+	private static var _version:String;
 	
 	function SiteModel()
 	{
@@ -51,8 +52,8 @@ class com.gaiaframework.core.SiteModel extends ObservableClass
 	}
 	public function load(path:String):Void
 	{
-		if (path == undefined || path == null || path.length == 0) path = "site.xml";
-		if (path != "site.xml") GaiaDebug.log("site.xml path = " + path);
+		if (path == undefined || path == null || path.length == 0)  path = "site.xml";
+		if (path != "xml/site.xml" && path != "site.xml") GaiaDebug.log("site.xml path = " + path);
 		_xml = new XML();
 		_xml.ignoreWhite = true;
 		_xml.onLoad = Delegate.create(this, onLoadComplete);
@@ -126,6 +127,10 @@ class com.gaiaframework.core.SiteModel extends ObservableClass
 	{
 		return _indexID;
 	}
+	public static function get version():String
+	{
+		return _version;
+	}
 	private function onLoadComplete():Void
 	{
 		var xmlObj:Object = {};
@@ -145,6 +150,7 @@ class com.gaiaframework.core.SiteModel extends ObservableClass
 		_history = !(xmlObj.site[0].attributes.history == "false");
 		_indexFirst = (xmlObj.site[0].attributes.indexFirst == "true");
 		_assetPath = xmlObj.site[0].attributes.assetPath || "";
+		_version = xmlObj.site[0].attributes.version || "";
 		//
 		var depth:String = String(xmlObj.site[0].attributes.preloaderDepth).toLowerCase();
 		if (depth == Gaia.MIDDLE || depth == Gaia.BOTTOM) _preloaderDepth = depth;

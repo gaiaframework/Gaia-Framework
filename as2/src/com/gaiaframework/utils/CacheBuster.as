@@ -12,6 +12,8 @@
 * http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
+import com.gaiaframework.core.SiteModel;
+
 class com.gaiaframework.utils.CacheBuster
 {
 	public static var isOnline:Boolean = false;
@@ -24,6 +26,16 @@ class com.gaiaframework.utils.CacheBuster
 			var nc:String = "nocache=" + d.getTime();
 			if (url.indexOf("?") > -1) return url + "&" + nc;
 			return url + "?" + nc;
+		}
+		return url;
+	}
+	public static function version(url:String):String
+	{
+		if (isOnline && SiteModel.version) 
+		{
+			var v:String = "gaiaSiteVersion=" + SiteModel.version;
+			if (url.indexOf("?") > -1) return url + "&" + v;
+			return url + "?" + v;
 		}
 		return url;
 	}
