@@ -109,6 +109,7 @@ package com.gaiaframework.assets
 			{
 				IPage(_loader.content).removeEventListener(PageEvent.TRANSITION_IN_COMPLETE, onTransitionInComplete);
 				IPage(_loader.content).removeEventListener(PageEvent.TRANSITION_OUT_COMPLETE, onTransitionOutComplete);
+				IPage(_loader.content).page = null;
 			}
 			GaiaSWFAddress.instance.removeEventListener(GaiaSWFAddressEvent.DEEPLINK, onDeeplink);
 			var ia:AbstractAsset;
@@ -121,8 +122,8 @@ package com.gaiaframework.assets
 		}
 		private function decorate():void
 		{
-			IPage(_loader.content).addEventListener(PageEvent.TRANSITION_IN_COMPLETE, onTransitionInComplete, false, 0, true);
-			IPage(_loader.content).addEventListener(PageEvent.TRANSITION_OUT_COMPLETE, onTransitionOutComplete, false, 0, true);
+			IPage(_loader.content).addEventListener(PageEvent.TRANSITION_IN_COMPLETE, onTransitionInComplete);
+			IPage(_loader.content).addEventListener(PageEvent.TRANSITION_OUT_COMPLETE, onTransitionOutComplete);
 			IPage(_loader.content).page = this;
 		}
 		private function initAssets():void

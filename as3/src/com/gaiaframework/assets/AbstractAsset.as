@@ -108,10 +108,10 @@ package com.gaiaframework.assets
 		{
 			try
 			{
-				obj.addEventListener(ProgressEvent.PROGRESS, onProgress, false, 0, true);
-				obj.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
-				obj.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
-				obj.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
+				obj.addEventListener(ProgressEvent.PROGRESS, onProgress);
+				obj.addEventListener(Event.COMPLETE, onComplete);
+				obj.addEventListener(IOErrorEvent.IO_ERROR, onError);
+				obj.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
 			}
 			catch (e:Error)
 			{

@@ -233,7 +233,7 @@ package com.gaiaframework.utils
 		}
 		private function fadeCallback():void
 		{
-			if (--fadeCallbackCount == 0) fadeCallbackFunction();
+			if (--fadeCallbackCount == 0 && fadeCallbackFunction != null) fadeCallbackFunction();
 		}
 		
 		// Pan all sounds in the group
@@ -252,7 +252,7 @@ package com.gaiaframework.utils
 		}
 		private function panCallback():void
 		{
-			if (--panCallbackCount == 0) panCallbackFunction();
+			if (--panCallbackCount == 0 && panCallbackFunction != null) panCallbackFunction();
 		}
 		
 		// Adjusts Volume as a percentage of individual asset volumes

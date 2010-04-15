@@ -12,8 +12,8 @@
 * http://www.opensource.org/licenses/gpl-2.0.php 
 *****************************************************************************************************/
 
-import gs.easing.Linear;
-import gs.TweenLite;
+import com.greensock.easing.Linear;
+import com.greensock.TweenMax;
 
 class com.gaiaframework.utils.SoundUtils
 {
@@ -21,11 +21,11 @@ class com.gaiaframework.utils.SoundUtils
 	
 	public static function fadeTo(target:Object, volume:Number, duration:Number, onComplete:Function):Void
 	{
-		TweenLite.to(target, duration, {volume:volume, ease:Linear.easeNone, onComplete:onComplete, overwrite:false});
+		TweenMax.to(target, duration, {volume:volume, ease:Linear.easeNone, onComplete:onComplete, overwrite:false});
 	}
 	public static function panTo(target:Object, pan:Number, duration:Number, onComplete:Function):Void
 	{
-		TweenLite.to(target, duration, {pan:pan, ease:Linear.easeNone, onComplete:onComplete, overwrite:false});
+		TweenMax.to(target, duration, {pan:pan, ease:Linear.easeNone, onComplete:onComplete, overwrite:false});
 	}
 	public static function set volume(value:Number):Void
 	{

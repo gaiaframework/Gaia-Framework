@@ -16,8 +16,8 @@ import com.gaiaframework.templates.AbstractPreloader;
 import com.gaiaframework.utils.ObservableClip;
 import com.gaiaframework.api.Gaia;
 import com.gaiaframework.events.*;
+import com.greensock.TweenMax;
 import mx.utils.Delegate;
-import gs.TweenLite;
 
 class PACKAGENAME.PreloaderScaffold extends ObservableClip
 {
@@ -36,11 +36,11 @@ class PACKAGENAME.PreloaderScaffold extends ObservableClip
 	}
 	public function transitionIn():Void
 	{
-		TweenLite.to(this, .1, {autoAlpha:100});
+		TweenMax.to(this, .1, {autoAlpha:100});
 	}
 	public function transitionOut():Void
 	{
-		TweenLite.to(this, .1, {autoAlpha:0});
+		TweenMax.to(this, .1, {autoAlpha:0});
 	}	
 	public function onProgress(event:AssetEvent):Void
 	{

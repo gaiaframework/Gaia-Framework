@@ -14,66 +14,54 @@
 
 package com.gaiaframework.debug
 {
-	import org.osflash.thunderbolt.Logger;
+	import flash.external.ExternalInterface;
 	import flash.system.Capabilities;
+	import flash.system.Security;
+	import nl.demonsters.debugger.MonsterDebugger;
 	
 	public class GaiaDebug
-	{		
+	{	
 		private static var isBrowser:Boolean = (Capabilities.playerType == "ActiveX" || Capabilities.playerType == "PlugIn");
+		private static var isConsole:Boolean = ExternalInterface.available && (Security.sandboxType == "remote" || Security.sandboxType == "localTrusted");
 		
 		public static function log(...args):void
 		{
-			if (!isBrowser)
+			try
 			{
-				trace.apply(null, args);
+				MonsterDebugger.trace(GaiaDebug, args.join(", "));
+				if (isBrowser && isConsole) ExternalInterface.call("console.log" , args);
 			}
-			else
+			catch (error:Error)
 			{
-				try
-				{
-					Logger.debug.apply(Logger, args);
-				}
-				catch (error:Error)
-				{
-					trace.apply(null, args);
-				}
+				//
 			}
+			trace.apply(null, args);
 		}
 		public static function error(...args):void
 		{
-			if (!isBrowser)
+			try
 			{
-				trace.apply(null, args);
+				MonsterDebugger.trace(GaiaDebug, args.join(", "), 0xCC0000);
+				if (isBrowser && isConsole) ExternalInterface.call("console.error" , args);
 			}
-			else
+			catch (error:Error)
 			{
-				try
-				{
-					Logger.error.apply(Logger, args);
-				}
-				catch (error:Error)
-				{
-					trace.apply(null, args);
-				}
+				//
 			}
+			trace.apply(null, args);
 		}
 		public static function warn(...args):void
 		{
-			if (!isBrowser)
+			try
 			{
-				trace.apply(null, args);
+				MonsterDebugger.trace(GaiaDebug, args.join(", "), 0xFF8800);
+				if (isBrowser && isConsole) ExternalInterface.call("console.warn" , args);
 			}
-			else
+			catch (error:Error)
 			{
-				try
-				{
-					Logger.warn.apply(Logger, args);
-				}
-				catch (error:Error)
-				{
-					trace.apply(null, args);
-				}
+				//
 			}
+			trace.apply(null, args);
 		}
 	}
 }

@@ -1,15 +1,15 @@
 /**
- * SWFAddress 2.2: Deep linking for Flash and Ajax <http://www.asual.com/swfaddress/>
+ * SWFAddress 2.4: Deep linking for Flash and Ajax <http://www.asual.com/swfaddress/>
  *
- * SWFAddress is (c) 2006-2008 Rostislav Hristov and contributors
- * This software is released under the MIT License <http://www.opensource.org/licenses/gpl-2.0.php>
+ * SWFAddress is (c) 2006-2009 Rostislav Hristov and contributors
+ * This software is released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
  *
  */
  
 /**
  * @author Rostislav Hristov <http://www.asual.com>
  * @author Matthew J Tretter <http://www.exanimo.com>
- * @author Piotr Zema <http://felixz.mark-naegeli.com>
+ * @author Piotr Zema <http://felixz.marknaegeli.com>
  */
 package com.asual.swfaddress {
 
@@ -22,28 +22,37 @@ package com.asual.swfaddress {
     public class SWFAddressEvent extends Event {
         
         /**
-         * Init event.
+         * Defines the <code>value</code> of the type property of a <code>init</code> event object.
          */
         public static const INIT:String = 'init';
 
         /**
-         * Change event.
+         * Defines the <code>value</code> of the type property of a <code>change</code> event object.
          */
         public static const CHANGE:String = 'change';
+
+        /**
+         * Defines the <code>value</code> of the type property of a <code>internalChange</code> event object.
+         */
+        public static const INTERNAL_CHANGE:String = 'internalChange';
+
+        /**
+         * Defines the <code>value</code> of the type property of a <code>externalChange</code> event object.
+         */
+        public static const EXTERNAL_CHANGE:String = 'externalChange';
         
         private var _value:String;
         private var _path:String;
         private var _pathNames:Array;
+        private var _parameterNames:Array;
         private var _parameters:Object;
-        private var _parametersNames:Array;
         
         /**
          * Creates a new SWFAddress event.
          * @param type Type of the event.
-         * @constructor
          */
-        public function SWFAddressEvent(type:String) {
-            super(type, false, false);
+        public function SWFAddressEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
+            super(type, bubbles, cancelable);
         }
 
         /**
@@ -54,7 +63,7 @@ package com.asual.swfaddress {
         }
 
         /**
-         * The target of this event.
+         * The type of this event.
          */
         public override function get type():String {
             return super.type;
@@ -103,8 +112,8 @@ package com.asual.swfaddress {
         public function get parameters():Object {
             if (_parameters == null) {
                 _parameters = new Object();
-                for (var i:int = 0; i < parametersNames.length; i++) {
-                    _parameters[parametersNames[i]] = SWFAddress.getParameter(parametersNames[i]);
+                for (var i:int = 0; i < parameterNames.length; i++) {
+                    _parameters[parameterNames[i]] = SWFAddress.getParameter(parameterNames[i]);
                 }
             }
             return _parameters;
@@ -113,26 +122,33 @@ package com.asual.swfaddress {
         /**
          * The parameters names of this event.
          */    
-        public function get parametersNames():Array {
-            if (_parametersNames == null) {
-                _parametersNames = SWFAddress.getParameterNames();            
+        public function get parameterNames():Array {
+            if (_parameterNames == null) {
+                _parameterNames = SWFAddress.getParameterNames();            
             }
-            return _parametersNames;
+            return _parameterNames;
         }
     
         /**
-         * Clones this event.
+         * Creates a copy of the <code>SWFAddressEvent</code> object and sets the value of each parameter to match the original.
          */
         public override function clone():Event {
-            return new SWFAddressEvent(type);
+            return new SWFAddressEvent(type, bubbles, cancelable);
         }
     
         /**
-         * The string representation of the object.
+         * Returns a string that contains all the properties of the SWFAddressEvent object.
+         * The string has the following format:
+         * 
+         * <p>[<code>SWFAddressEvent type=<em>value</em> bubbles=<em>value</em>
+         * cancelable=<em>value</em> eventPhase= value=<em>value</em> path=<em>value</em>
+         * paths=<em>value</em> parameters=<em>value</em></code>]</p>
+         * 
+         * @return A string representation of the <code>SWFAddressEvent</code> object.
          */
         public override function toString():String {
             return formatToString('SWFAddressEvent', 'type', 'bubbles', 'cancelable', 
-                'eventPhase', 'value', 'path', 'pathNames', 'parameters', 'parametersNames');
+                'eventPhase', 'value', 'path', 'pathNames', 'parameterNames', 'parameters');
         }
     }
 }

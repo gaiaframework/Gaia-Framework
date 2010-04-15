@@ -1,15 +1,15 @@
 /**
- * SWFAddress 2.2: Deep linking for Flash and Ajax <http://www.asual.com/swfaddress/>
+ * SWFAddress 2.4: Deep linking for Flash and Ajax <http://www.asual.com/swfaddress/>
  *
- * SWFAddress is (c) 2006-2008 Rostislav Hristov and contributors
- * This software is released under the MIT License <http://www.opensource.org/licenses/gpl-2.0.php>
+ * SWFAddress is (c) 2006-2009 Rostislav Hristov and contributors
+ * This software is released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
  *
  */
 
 /**
  * @author Rostislav Hristov <http://www.asual.com>
  * @author Mark Ross <http://www.therossman.org>
- * @author Piotr Zema <http://felixz.mark-naegeli.com>
+ * @author Piotr Zema <http://felixz.marknaegeli.com>
  */
 package com.asual.swfaddress {
 
@@ -23,20 +23,37 @@ package com.asual.swfaddress {
     import flash.system.Capabilities;
     import flash.utils.Timer;
     import com.asual.swfaddress.SWFAddressEvent;
-    
-    [Event(name='init', type='com.asual.swfaddress.SWFAddressEvent')]    
+
+    /**
+     * Dispatched when <code>SWFAddress</code> initializes.
+     */
+    [Event(name='init', type='com.asual.swfaddress.SWFAddressEvent')]
+    /**
+     * Dispatched when any value change.
+     */
     [Event(name='change', type='com.asual.swfaddress.SWFAddressEvent')]
+    /**
+     * Dispatched when value was changed by Flash.
+     */
+    [Event(name='internalChange', type='com.asual.swfaddress.SWFAddressEvent')]
+    /**
+     * Dispatched when value was changed by Browser.
+     */
+    [Event(name='externalChange', type='com.asual.swfaddress.SWFAddressEvent')]
 
     /**
      * SWFAddress class. 
      */ 
     public class SWFAddress {
-    
+
         private static var _init:Boolean = false;
-        private static var _initChange:Boolean = false;        
+        private static var _initChange:Boolean = false;
+        private static var _initChanged:Boolean = false;
         private static var _strict:Boolean = true;
         private static var _value:String = '';
-        private static var _timer:Timer = null;
+        private static var _queue:Array = new Array();
+        private static var _queueTimer:Timer = new Timer(10);
+        private static var _initTimer:Timer = new Timer(10);
         private static var _availability:Boolean = ExternalInterface.available;
         private static var _dispatcher:EventDispatcher = new EventDispatcher();
 
@@ -50,33 +67,42 @@ package com.asual.swfaddress {
          */
         public static var onChange:Function;
 
+        /**
+         * @throws IllegalOperationError The class cannot be instantiated.
+         */
         public function SWFAddress() {
-            throw new IllegalOperationError("SWFAddress cannot be instantiated.");
+            throw new IllegalOperationError('SWFAddress cannot be instantiated.');
         }
         
         private static function _initialize():Boolean {
             if (_availability) {
-                ExternalInterface.addCallback('getSWFAddressValue', 
-                    function():String {return _value});
-                ExternalInterface.addCallback('setSWFAddressValue', 
-                    _setValue);
+                try {
+                    _availability = 
+                        ExternalInterface.call('function() { return (typeof SWFAddress != "undefined"); }') 
+                            as Boolean;
+                    ExternalInterface.addCallback('getSWFAddressValue', 
+                        function():String {return _value});
+                    ExternalInterface.addCallback('setSWFAddressValue',
+                        _setValue);
+                } catch (e:Error) {
+                    _availability = false;
+                }
             }
-            if (_timer == null) {
-                _timer = new Timer(10);
-                _timer.addEventListener(TimerEvent.TIMER, _check);
-            }
-            _timer.start();
+            _queueTimer.addEventListener(TimerEvent.TIMER, _callQueue);            
+            _initTimer.addEventListener(TimerEvent.TIMER, _check);
+            _initTimer.start();
             return true;
         }
         private static var _initializer:Boolean = _initialize();
         
-        private static function _check(e:TimerEvent):void {
-            if ((typeof SWFAddress['onInit'] == 'function' || _dispatcher.hasEventListener('init')) && !_init) {
+        private static function _check(event:TimerEvent):void {
+            if ((typeof SWFAddress['onInit'] == 'function' || _dispatcher.hasEventListener(SWFAddressEvent.INIT)) && !_init) {
                 SWFAddress._setValueInit(_getValue());
-                SWFAddress._init = true;                
+                SWFAddress._init = true;
             }
-            if (typeof SWFAddress['onChange'] == 'function' || _dispatcher.hasEventListener('change')) {
-                _timer.stop();
+            if (typeof SWFAddress['onChange'] == 'function' || _dispatcher.hasEventListener(SWFAddressEvent.CHANGE) || 
+                typeof SWFAddress['onExternalChange'] == 'function' || _dispatcher.hasEventListener(SWFAddressEvent.EXTERNAL_CHANGE)) {
+                _initTimer.stop();
                 SWFAddress._init = true;
                 SWFAddress._setValueInit(_getValue());
             }
@@ -92,7 +118,7 @@ package com.asual.swfaddress {
             }
             return value;
         }
-
+        
         private static function _getValue():String {
             var value:String, ids:String = null;
             if (_availability) { 
@@ -101,20 +127,21 @@ package com.asual.swfaddress {
                 if (arr != null)
                     ids = arr.toString(); 
             }
-            if (ids == null || !_availability) {
+            if (ids == null || !_availability || _initChanged) {
                 value = SWFAddress._value;
-            } else {
-                if (value == 'undefined' || value == null) value = '';
+            } else if (value == 'undefined' || value == null) {
+                value = '';
             }
             return _strictCheck(value || '', false);
         }
 
-        private static function _setValueInit(value:String):void {        
+        private static function _setValueInit(value:String):void {
             SWFAddress._value = value;
             if (!_init) {
                 _dispatchEvent(SWFAddressEvent.INIT);
             } else {
                 _dispatchEvent(SWFAddressEvent.CHANGE);
+                _dispatchEvent(SWFAddressEvent.EXTERNAL_CHANGE);
             }
             _initChange = true;
         }        
@@ -126,12 +153,13 @@ package com.asual.swfaddress {
             SWFAddress._value = value;
             if (!_init) {
                 SWFAddress._init = true;
-                if (typeof SWFAddress['onInit'] == 'function' || _dispatcher.hasEventListener('init')) {
+                if (typeof SWFAddress['onInit'] == 'function' || _dispatcher.hasEventListener(SWFAddressEvent.INIT)) {
                     _dispatchEvent(SWFAddressEvent.INIT);
                 }
             }
             _dispatchEvent(SWFAddressEvent.CHANGE);
-        }        
+            _dispatchEvent(SWFAddressEvent.EXTERNAL_CHANGE);
+        }
         
         private static function _dispatchEvent(type:String):void {
             if (_dispatcher.hasEventListener(type)) {
@@ -142,21 +170,46 @@ package com.asual.swfaddress {
                 SWFAddress['on' + type]();
             }
         }
-
+        
+        private static function _callQueue(event:TimerEvent):void {
+            if (_queue.length != 0) {
+                var script:String = '';
+                for (var i:int = 0, obj:Object; obj = _queue[i]; i++) {
+                    if (obj.param is String) obj.param = '"' + obj.param + '"';
+                    script += obj.fn + '(' + obj.param + ');';
+                }
+                _queue = new Array();
+                navigateToURL(new URLRequest('javascript:' + script + 'void(0);'), '_self');
+            } else {
+                _queueTimer.stop();
+            }
+        }
+        
+        private static function _call(fn:String, param:Object=''):void {
+            if (_availability) {
+                if (Capabilities.os.indexOf('Mac') != -1) {
+                    if (_queue.length == 0) {
+                        _queueTimer.start();
+                    }
+                    _queue.push({fn: fn, param: param});
+                } else {
+                    ExternalInterface.call(fn, param);
+                }
+            }
+        }
+        
         /**
          * Loads the previous URL in the history list.
          */
         public static function back():void {
-            if (_availability)
-                ExternalInterface.call('SWFAddress.back');
+            _call('SWFAddress.back');
         }
 
         /**
          * Loads the next URL in the history list.
          */
         public static function forward():void {
-            if (_availability)
-                ExternalInterface.call('SWFAddress.forward');
+            _call('SWFAddress.forward');
         }
 
         /**
@@ -172,8 +225,7 @@ package com.asual.swfaddress {
          * @param delta An integer representing a relative position in the history list.
          */
         public static function go(delta:int):void {
-            if (_availability)
-                ExternalInterface.call('SWFAddress.go', delta);
+            _call('SWFAddress.go', delta);
         }
         
         /**
@@ -206,12 +258,14 @@ package com.asual.swfaddress {
         }
         
         /**
-         * Registers an event listener.
-         * @param type Event type.
-         * @param listener Event listener.
+         * Registers an event listener object with an EventDispatcher object so that the listener receives notification of an event. 
+         * You can register event listeners on all nodes in the display list for a specific type of event, phase, and priority.
+         * @param type The type of event.
+         * @param listener The listener function that processes the event. This function must accept an Event object as its only parameter and must return nothing.
          * @param useCapture Determines whether the listener works in the capture phase or the target and bubbling phases.
          * @param priority The priority level of the event listener.
          * @param useWeakReference Determines whether the reference to the listener is strong or weak.
+         * @throws ArgumentError The listener specified is not a function. 
          */
         public static function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, 
             useWeakReference:Boolean = false):void {
@@ -219,25 +273,32 @@ package com.asual.swfaddress {
         }
 
         /**
-         * Removes an event listener.
-         * @param type Event type.
-         * @param listener Event listener.
+         * Removes a listener from the EventDispatcher object. If there is no matching listener registered with the EventDispatcher object, a call to this method has no effect.
+         * @param type The type of event. 
+         * @param listener The listener object to remove.
+         * @param useCapture Specifies whether the listener was registered for the capture phase or the target and bubbling phases. 
+         * If the listener was registered for both the capture phase and the target and bubbling phases, two calls to removeEventListener() are required to remove both, 
+         * one call with useCapture() set to true, and another call with useCapture() set to false. 
          */
-        public static function removeEventListener(type:String, listener:Function):void {
-            _dispatcher.removeEventListener(type, listener, false);
+        public static function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void {
+            _dispatcher.removeEventListener(type, listener, useCapture);
         }
 
         /**
          * Dispatches an event to all the registered listeners. 
          * @param event Event object.
+         * @return A value of <code>true</code> if a listener of the specified type is registered; <code>false</code> otherwise.
+         * @throws Error The event dispatch recursion limit has been reached. 
          */
         public static function dispatchEvent(event:Event):Boolean {
             return _dispatcher.dispatchEvent(event);
         }
 
         /**
-         * Checks the existance of any listeners registered for a specific type of event. 
-         * @param event Event type.
+         * Checks whether the EventDispatcher object has any listeners registered for a specific type of event. This allows you to determine where an EventDispatcher object has 
+         * altered handling of an event type in the event flow hierarchy.
+         * @param event The type of event.  
+         * @return A value of <code>true</code> if a listener of the specified type is registered; <code>false</code> otherwise. 
          */
         public static function hasEventListener(type:String):Boolean {
             return _dispatcher.hasEventListener(type);
@@ -265,11 +326,10 @@ package com.asual.swfaddress {
 
         /**
          * Enables or disables the strict mode.
-         * @param {Boolean} strict Strict mode state.
+         * @param strict Strict mode state.
          */
         public static function setStrict(strict:Boolean):void {
-            if (_availability)
-                ExternalInterface.call('SWFAddress.setStrict', strict);
+            _call('SWFAddress.setStrict', strict);
             _strict = strict;
         }
 
@@ -283,11 +343,10 @@ package com.asual.swfaddress {
 
         /**
          * Enables or disables the creation of history entries.
-         * @param {Boolean} history History state.
+         * @param history History state.
          */
         public static function setHistory(history:Boolean):void {
-            if (_availability)
-                ExternalInterface.call('SWFAddress.setHistory', history);
+            _call('SWFAddress.setHistory', history);
         }
 
         /**
@@ -303,8 +362,7 @@ package com.asual.swfaddress {
          * @param tracker Tracker function.
          */
         public static function setTracker(tracker:String):void {
-            if (_availability)
-                ExternalInterface.call('SWFAddress.setTracker', tracker);
+            _call('SWFAddress.setTracker', tracker);
         }
 
         /**
@@ -314,7 +372,7 @@ package com.asual.swfaddress {
             var title:String = (_availability) ? 
                 ExternalInterface.call('SWFAddress.getTitle') as String : '';
             if (title == 'undefined' || title == null) title = '';
-            return title;
+            return decodeURI(title);
         }
 
         /**
@@ -322,7 +380,7 @@ package com.asual.swfaddress {
          * @param title Title value.
          */
         public static function setTitle(title:String):void {
-            if (_availability) ExternalInterface.call('SWFAddress.setTitle', title);
+            _call('SWFAddress.setTitle', encodeURI(decodeURI(title)));
         }
 
         /**
@@ -332,7 +390,7 @@ package com.asual.swfaddress {
             var status:String = (_availability) ? 
                 ExternalInterface.call('SWFAddress.getStatus') as String : '';
             if (status == 'undefined' || status == null) status = '';
-            return status;
+            return decodeURI(status);
         }
 
         /**
@@ -340,21 +398,21 @@ package com.asual.swfaddress {
          * @param status Status value.
          */
         public static function setStatus(status:String):void {
-            if (_availability) ExternalInterface.call('SWFAddress.setStatus', status);
+            _call('SWFAddress.setStatus', encodeURI(decodeURI(status)));
         }
 
         /**
          * Resets the status of the browser window.
          */
         public static function resetStatus():void {
-            if (_availability) ExternalInterface.call('SWFAddress.resetStatus');
+            _call('SWFAddress.resetStatus');
         }
 
         /**
          * Provides the current deep linking value.
          */
         public static function getValue():String {
-            return _strictCheck(_value || '', false);
+            return decodeURI(_strictCheck(_value || '', false));
         }
 
         /**
@@ -363,11 +421,16 @@ package com.asual.swfaddress {
          */
         public static function setValue(value:String):void {
             if (value == 'undefined' || value == null) value = '';
-            value = _strictCheck(value, true);
+            value = encodeURI(decodeURI(_strictCheck(value, true)));
             if (SWFAddress._value == value) return;
             SWFAddress._value = value;
-            if (_availability && SWFAddress._init) ExternalInterface.call('SWFAddress.setValue', value);
-            _dispatchEvent(SWFAddressEvent.CHANGE);
+            _call('SWFAddress.setValue', value);
+            if (SWFAddress._init) {
+                _dispatchEvent(SWFAddressEvent.CHANGE);
+                _dispatchEvent(SWFAddressEvent.INTERNAL_CHANGE);
+            } else {
+                _initChanged = true;
+            }
         }
 
         /**
@@ -377,6 +440,8 @@ package com.asual.swfaddress {
             var value:String = SWFAddress.getValue();
             if (value.indexOf('?') != -1) {
                 return value.split('?')[0];
+            } else if (value.indexOf('#') != -1) {
+                return value.split('#')[0];
             } else {
                 return value;
             }
@@ -404,14 +469,14 @@ package com.asual.swfaddress {
             if (index != -1 && index < value.length) {
                 return value.substr(index + 1);
             }
-            return '';
+            return null;
         }
 
         /**
-         * Provides the value of a specific query parameter.
+         * Provides the value of a specific query parameter as a string or array of strings.
          * @param param Parameter name.
          */
-        public static function getParameter(param:String):String {
+        public static function getParameter(param:String):Object {
             var value:String = SWFAddress.getValue();
             var index:Number = value.indexOf('?');
             if (index != -1) {
@@ -419,14 +484,18 @@ package com.asual.swfaddress {
                 var params:Array = value.split('&');
                 var p:Array;
                 var i:Number = params.length;
+                var r:Array = new Array();
                 while(i--) {
                     p = params[i].split('=');
                     if (p[0] == param) {
-                        return p[1];
+                        r.push(p[1]);
                     }
                 }
+                if (r.length != 0) {
+                    return r.length != 1 ? r : r[0];
+                }
             }
-            return '';
+            return null;
         }
 
         /**

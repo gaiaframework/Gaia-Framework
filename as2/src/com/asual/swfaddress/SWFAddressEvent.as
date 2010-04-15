@@ -1,8 +1,8 @@
 /**
- * SWFAddress 2.2: Deep linking for Flash and Ajax <http://www.asual.com/swfaddress/>
+ * SWFAddress 2.4: Deep linking for Flash and Ajax <http://www.asual.com/swfaddress/>
  *
- * SWFAddress is (c) 2006-2008 Rostislav Hristov and contributors
- * This software is released under the MIT License <http://www.opensource.org/licenses/gpl-2.0.php>
+ * SWFAddress is (c) 2006-2009 Rostislav Hristov and contributors
+ * This software is released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
  *
  */
 
@@ -12,13 +12,15 @@ class com.asual.swfaddress.SWFAddressEvent {
 
     public static var INIT:String = 'init';
     public static var CHANGE:String = 'change';
+    public static var INTERNAL_CHANGE:String = 'internalChange';
+    public static var EXTERNAL_CHANGE:String = 'externalChange';
         
     private var _type:String;
     private var _value:String;
     private var _path:String;
     private var _pathNames:Array;
+    private var _parameterNames:Array;
     private var _parameters:Object;
-    private var _parametersNames:Array;
     
     public function SWFAddressEvent(type:String) {
         _type = type;
@@ -60,17 +62,17 @@ class com.asual.swfaddress.SWFAddressEvent {
     public function get parameters():Object {
         if (typeof _parameters == 'undefined') {
             _parameters = new Array();
-            for (var i:Number = 0; i < parametersNames.length; i++) {
-                _parameters[parametersNames[i]] = SWFAddress.getParameter(parametersNames[i]);
+            for (var i:Number = 0; i < parameterNames.length; i++) {
+                _parameters[parameterNames[i]] = SWFAddress.getParameter(parameterNames[i]);
             }
         }
         return _parameters;
     }
 
-    public function get parametersNames():Array {
-        if (typeof _parametersNames == 'undefined') {
-            _parametersNames = SWFAddress.getParameterNames();
+    public function get parameterNames():Array {
+        if (typeof _parameterNames == 'undefined') {
+            _parameterNames = SWFAddress.getParameterNames();
         }
-        return _parametersNames;
+        return _parameterNames;
     }    
 }

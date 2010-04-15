@@ -15,13 +15,12 @@
 package PACKAGENAME
 {
 	import com.gaiaframework.events.PageEvent;
-	import flash.net.URLRequest;
-	import flash.display.Loader;
+	import com.gaiaframework.templates.AbstractPage;
 	
+	import flash.display.Loader;	
 	import flash.display.MovieClip;
 	import flash.events.Event;
-	
-	import com.gaiaframework.templates.AbstractPage;
+	import flash.net.URLRequest;
 	
 	public class Scaffold
 	{

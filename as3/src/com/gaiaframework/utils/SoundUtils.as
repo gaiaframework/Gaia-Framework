@@ -16,8 +16,8 @@ package com.gaiaframework.utils
 {
 	import flash.media.SoundTransform;
 	import flash.media.SoundMixer;
-	import gs.easing.Linear;
-	import gs.TweenLite;
+	import com.greensock.easing.Linear;
+	import com.greensock.TweenMax;
 	
 	public class SoundUtils
 	{
@@ -25,11 +25,11 @@ package com.gaiaframework.utils
 		
 		public static function fadeTo(target:*, value:Number, duration:Number, onComplete:Function = null):void
 		{
-			TweenLite.to(target, duration, {volume:value, ease:Linear.easeNone, onComplete:onComplete, overwrite:false});
+			TweenMax.to(target, duration, {volume:value, ease:Linear.easeNone, onComplete:onComplete, overwrite:false});
 		}
 		public static function panTo(target:*, value:Number, duration:Number, onComplete:Function = null):void
 		{
-			TweenLite.to(target, duration, {pan:value, ease:Linear.easeNone, onComplete:onComplete, overwrite:false});
+			TweenMax.to(target, duration, {pan:value, ease:Linear.easeNone, onComplete:onComplete, overwrite:false});
 		}
 		public static function set volume(value:Number):void
 		{
